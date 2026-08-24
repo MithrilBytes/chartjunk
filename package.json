@@ -28,6 +28,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./theorem-ipsum": {
+      "types": "./dist/theorem-ipsum.d.ts",
+      "default": "./dist/theorem-ipsum.js"
     }
   },
   "bin": {
@@ -41,7 +45,8 @@
     "build:site": "esbuild src/index.ts --bundle --format=esm --minify --outfile=site/chartjunk.esm.js",
     "dev": "esbuild src/index.ts --bundle --format=esm --outfile=site/chartjunk.esm.js --watch",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "snapshots": "npm run build && node test/regenerate-golden.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
