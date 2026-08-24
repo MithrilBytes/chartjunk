@@ -6,7 +6,7 @@ describe("determinism", () => {
   it("same seed, same bytes, every format and kind", () => {
     for (const kind of [...PLOT_KINDS, "figure", "caption"] as const) {
       for (const seed of ["alpha", 42, "figure-7"]) {
-        for (const format of ["svg", "json"] as const) {
+        for (const format of ["svg", "tikz", "html", "markdown", "text", "json"] as const) {
           const a = chartjunk({ seed, kind, format });
           const b = chartjunk({ seed, kind, format });
           expect(a, `${kind}/${seed}/${format}`).toBe(b);
