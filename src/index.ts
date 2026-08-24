@@ -9,8 +9,12 @@ import type { Figure, Kind } from "./types.js";
 import { type GenerateOptions, generateFigure, randomSeed } from "./figure.js";
 import { renderSvg } from "./render/svg.js";
 import { renderJson } from "./render/json.js";
+import { TIKZ_PREAMBLE, renderTikz } from "./render/tikz.js";
+import { renderHtml } from "./render/html.js";
+import { type MarkdownOptions, markdownSidecarSvg, renderMarkdown } from "./render/markdown.js";
+import { renderText } from "./render/text.js";
 
-export type Format = "svg" | "json";
+export type Format = "svg" | "tikz" | "html" | "markdown" | "text" | "json";
 
 export type {
   Annotation, ArtifactId, Axis, Caption, Dash, Figure, Kind, Legend, LegendEntry,
@@ -23,13 +27,18 @@ export type { Seed } from "./rng.js";
 
 export { generateFigure, randomSeed };
 export { Rng } from "./rng.js";
-export { ARTIFACT_IDS, CATALOGUE } from "./artifacts.js";
-export { renderSvg };
+export { ARTIFACT_IDS, ARTIFACT_NOTES, CATALOGUE } from "./artifacts.js";
+export { TIKZ_PREAMBLE, markdownSidecarSvg, renderHtml, renderMarkdown, renderSvg, renderText, renderTikz };
+export type { MarkdownOptions };
 
 /** Render a generated Figure to the given format. */
 export function render(fig: Figure, format: Format = "svg"): string {
   switch (format) {
     case "svg": return renderSvg(fig);
+    case "tikz": return renderTikz(fig);
+    case "html": return renderHtml(fig);
+    case "markdown": return renderMarkdown(fig);
+    case "text": return renderText(fig);
     case "json": return renderJson(fig);
   }
 }

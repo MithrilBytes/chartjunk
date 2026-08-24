@@ -107,3 +107,37 @@ export function starCount(confidence: number): 0 | 1 | 2 | 3 {
   if (confidence < 0.7) return 2;
   return 3;
 }
+
+/** One line per gag, for the demo's annotate-the-sins overlay. */
+export const ARTIFACT_NOTES: Record<ArtifactId, string> = {
+  "orphan-legend": "one legend entry corresponds to nothing on the plot",
+  "ours-bold": "the method under review is bold, starred, and first in line",
+  "error-bars": "error bar width is set by confidence, not by any data",
+  "significance-stars": "stars assert significance; nothing was tested",
+  "r-squared": "the R squared was chosen, not computed",
+  "infeasible-region": "a shaded region declares the rest of the plane off limits",
+  "phase-regions": "regimes I, II, and III, defined nowhere",
+  "hatched-unstable": "the hatched corner is unstable, allegedly",
+  "colorbar-unit": "the colorbar carries a unit that cannot exist",
+  "log-axis": "log axes flatter whichever curve needs it",
+  "zero-suppressed": "the y axis starts just under the data, not at zero",
+  "gap-arrow": "an arrow labels the gap, in case it went unnoticed",
+  "theoretical-limit": "a dashed line cites a theorem that does not appear",
+  "excluded-outlier": "the outlier was excluded from analysis, not from the plot",
+  "marginal-rug": "rug marks add texture, not information",
+  "boundary-equation": "the boundary follows an equation no one derives",
+  "see-text": "a boxed point defers to text that never elaborates",
+  "cell-values": "every cell prints its value on top of its color",
+  "grid-major": "a major grid, for gravitas",
+  "grid-minor": "a minor grid under the major grid",
+  "broken-axis": "the y axis skips the part that would deflate the bars",
+  "rotated-ticks": "tick labels rotated 45 degrees for maximum effort",
+  "best-viewed-in-color": "the caption says best viewed in color",
+  "legend-over-data": "the legend sits directly on the data",
+  "log-scale-note": "the label repeats (log scale) although the ticks say so",
+  "draft-watermark": "PRELIMINARY, stamped diagonally",
+  "inset-zoom": "an inset zooms into the region where ours wins",
+  "secondary-axis": "a second y axis with an unrelated unit",
+  "panel-mismatch": "one panel is a different kind with its own legend",
+  "orphan-cross-panel": "the orphan legend entry points at a different panel",
+};
