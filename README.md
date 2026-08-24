@@ -101,6 +101,34 @@ that fired, by id.
 PNG and PDF are out of scope; `resvg` or `rsvg-convert` rasterize the SVG,
 and Tectonic compiles the TikZ.
 
+## theorem-ipsum integration
+
+`chartjunk/theorem-ipsum` exports a figure provider for
+[theorem-ipsum](https://github.com/MithrilBytes/theorem-ipsum): the paper
+passes its seed, figure number, noun palette, and bibliography numbers, and
+gets a `Figure` whose captions speak the paper's language and cite entries
+that exist. Gobbledygook passes through; density follows the paper's
+length; confidence sits at 0.7, because papers want to win.
+
+```js
+import { figures } from "chartjunk/theorem-ipsum";
+
+const fig = figures({
+  seed: "paper-7:figure:2",
+  number: 2,
+  gobbledygook: 0.8,
+  length: 0.6,
+  vocabulary: { method: "SPLINE", citations: [3, 7, 12] },
+});
+```
+
+## Releases and snapshots
+
+A workflow publishes the figure of the day (SVG, TikZ, and compiled PDF)
+as a release, seeded by the date. Golden SVG snapshots pin eight seeds in
+`test/golden/`; `npm run snapshots` regenerates them after an intentional
+rendering change.
+
 ## License
 
 MIT.
