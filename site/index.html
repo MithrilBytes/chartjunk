@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>chartjunk</title>
+<meta name="description" content="Rigorous-looking figures with no data behind them, generated in your browser. Same seed, same figure.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='14' y='14' width='72' height='72' rx='12' fill='%231f77b4'/%3E%3Cpath d='M28 68 44 50 56 58 72 34' stroke='%23fff' stroke-width='7' fill='none'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="main.js"></script>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="side">
+    <h1>chartjunk</h1>
+    <p>
+      This figure is complete nonsense, generated in your browser. The URL
+      carries the seed: same seed, same figure, same comfortable lead for
+      the bold method, no data behind any of it.
+    </p>
+    <p>
+      Sibling of
+      <a href="https://mithrilbytes.github.io/theorem-ipsum/">theorem-ipsum</a>:
+      fake papers need fake figures.
+    </p>
+    <label class="seed-label" for="seed">seed</label>
+    <input id="seed" type="text" spellcheck="false" autocomplete="off" aria-label="Seed">
+    <button id="randomize">randomize</button>
+    <div class="row">
+      <button id="download" class="secondary">download .svg</button>
+      <button id="copy-tikz" class="secondary">copy tikz</button>
+    </div>
+    <div class="selects">
+      <label for="kind">kind</label>
+      <select id="kind" aria-label="Kind">
+        <option value="figure" selected>figure (seeded pick)</option>
+        <option value="line">line</option>
+        <option value="scatter">scatter</option>
+        <option value="bar">bar</option>
+        <option value="heatmap">heatmap</option>
+        <option value="pareto">pareto</option>
+        <option value="phase">phase</option>
+        <option value="panels">panels</option>
+      </select>
+      <label for="style">style</label>
+      <select id="style" aria-label="Style">
+        <option value="matplotlib" selected>matplotlib</option>
+        <option value="ggplot">ggplot</option>
+        <option value="pgfplots">pgfplots</option>
+        <option value="excel">excel</option>
+      </select>
+      <label for="format">source</label>
+      <select id="format" aria-label="Source format">
+        <option value="tikz" selected>tikz</option>
+        <option value="svg">svg</option>
+        <option value="markdown">markdown</option>
+        <option value="text">text</option>
+        <option value="json">json</option>
+      </select>
+    </div>
+    <div class="dials">
+      <div class="dial">
+        <label for="density">density <span class="dial-value" data-value="density">0.50</span></label>
+        <input id="density" type="range" min="0" max="1" step="0.05" value="0.5" aria-label="Density">
+        <div class="dial-ends"><span>one line</span><span>six panels</span></div>
+      </div>
+      <div class="dial">
+        <label for="junk">junk <span class="dial-value" data-value="junk">0.50</span></label>
+        <input id="junk" type="range" min="0" max="1" step="0.05" value="0.5" aria-label="Junk">
+        <div class="dial-ends"><span>clean</span><span>baroque</span></div>
+      </div>
+      <div class="dial">
+        <label for="confidence">confidence <span class="dial-value" data-value="confidence">0.50</span></label>
+        <input id="confidence" type="range" min="0" max="1" step="0.05" value="0.5" aria-label="Confidence">
+        <div class="dial-ends"><span>n.s.</span><span>p &lt; 10⁻⁴</span></div>
+      </div>
+      <div class="dial">
+        <label for="gobbledygook">gobbledygook <span class="dial-value" data-value="gobbledygook">0.50</span></label>
+        <input id="gobbledygook" type="range" min="0" max="1" step="0.05" value="0.5" aria-label="Gobbledygook">
+        <div class="dial-ends"><span>sober</span><span>unhinged</span></div>
+      </div>
+    </div>
+    <div class="toggles">
+      <label><input id="mono" type="checkbox"> mono</label>
+      <label><input id="orphan" type="checkbox" checked> orphan legend entry</label>
+      <label><input id="sins" type="checkbox"> annotate the sins</label>
+    </div>
+    <p class="install">
+      <a href="https://github.com/MithrilBytes/chartjunk">github.com/MithrilBytes/chartjunk</a>
+    </p>
+  </aside>
+
+  <main class="sheet-wrap">
+    <div class="sheet">
+      <div id="figure" aria-live="polite"></div>
+      <div id="sins-panel" hidden>
+        <h2>the sins <span id="sins-count"></span></h2>
+        <ul id="sins-list"></ul>
+      </div>
+    </div>
+    <details class="source">
+      <summary>source</summary>
+      <pre id="source-pane"></pre>
+    </details>
+  </main>
+</div>
+
+</body>
+</html>
