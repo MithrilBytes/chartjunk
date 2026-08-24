@@ -5,7 +5,10 @@ Produces convergence curves on log axes, grouped bars with error bars,
 Pareto frontiers with a shaded region labeled "infeasible", heatmaps with a
 nonsense colorbar unit, phase diagrams, multi-panel grids, a bold "(ours)"
 that always wins (unless told not to), and a legend entry that corresponds
-to nothing on the plot.
+to nothing on the plot. The same figure comes out in SVG, TikZ/pgfplots,
+HTML, Markdown, plain text, or JSON.
+
+Live demo: https://mithrilbytes.github.io/chartjunk/
 
 A sibling of [theorem-ipsum](https://github.com/MithrilBytes/theorem-ipsum):
 fake papers need fake figures. The same seed always produces the same
@@ -18,8 +21,10 @@ Not published to npm; clone and build locally.
 ```bash
 npm install && npm run build
 node dist/cli.js                                   # svg figure, random seed
-node dist/cli.js --seed 42 -k pareto -o fig1.svg
+node dist/cli.js --seed 42 -k pareto -f tikz -o fig1.tex
 node dist/cli.js -k bar --confidence 1 --junk 0.8 -o fig2.svg
+node dist/cli.js -k panels --panels 4 --style ggplot -f html
+node dist/cli.js -f tikz --preamble               # the LaTeX preamble tikz needs
 node dist/cli.js -k figure -f json | jq .artifacts
 ```
 
@@ -27,7 +32,7 @@ node dist/cli.js -k figure -f json | jq .artifacts
 | --- | --- |
 | `-s, --seed` | any string or number |
 | `-k, --kind` | `figure`, `line`, `scatter`, `bar`, `heatmap`, `pareto`, `phase`, `panels`, `caption` |
-| `-f, --format` | `svg`, `json` |
+| `-f, --format` | `svg`, `tikz`, `html`, `markdown`, `text`, `json` |
 | `--density` | 0 to 1; series, points, panels, insets, secondary axes |
 | `--junk` | 0 to 1; non-data ink: grids, boxes, notes, watermarks |
 | `--confidence` | 0 to 1; how far ahead "(ours)" lands, and how small its error bars |
@@ -38,9 +43,11 @@ node dist/cli.js -k figure -f json | jq .artifacts
 | `--number` | figure number in the caption, default 1 |
 | `--mono` | grayscale; dashes and hatching carry the series distinction |
 | `--no-orphan` | suppress the orphan legend entry |
-| `-o, --out` | output file |
+| `--preamble` | print the LaTeX preamble the `tikz` output needs |
+| `-o, --out` | output file; `markdown` writes a sidecar `.svg` next to it |
 
 Each dial defaults to 0.5. The `excel` style refuses to drop below junk 0.5.
+The format is inferred from the `--out` extension when `-f` is omitted.
 
 ## Library
 
@@ -82,9 +89,17 @@ that fired, by id.
 
 ## Formats
 
-SVG is hand-written with text as `<text>`, so it stays selectable and
-small. JSON emits the `Figure` structure itself. PNG and PDF are out of
-scope; `resvg` or `rsvg-convert` rasterize the SVG when needed.
+| format | output |
+| --- | --- |
+| `svg` | standalone `<svg>`, hand-written, text as `<text>` so it stays selectable and small |
+| `tikz` | a `tikzpicture` using pgfplots that drops into `\begin{figure}`; `--preamble` prints the required preamble, and CI compiles samples with Tectonic on every push |
+| `html` | a self-contained `<figure>` with inline SVG and a `<figcaption>` |
+| `markdown` | an image line plus a caption paragraph; sidecar `.svg` with `--out`, data URI without |
+| `text` | box-drawing axes, `·×▲` markers, `░▒▓█` heatmaps, 72 columns |
+| `json` | the `Figure` structure itself |
+
+PNG and PDF are out of scope; `resvg` or `rsvg-convert` rasterize the SVG,
+and Tectonic compiles the TikZ.
 
 ## License
 
