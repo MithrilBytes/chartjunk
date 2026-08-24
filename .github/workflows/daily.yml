@@ -34,10 +34,12 @@ jobs:
           node /tmp/cli.mjs --seed "$seed" -f tikz -o "chartjunk-$seed.tex"
           node /tmp/cli.mjs --seed "$seed" -f json -o /tmp/fig.json
           node /tmp/cli.mjs --preamble > /tmp/preamble.tex
+          # Tectonic resolves \input relative to the wrapper document, so
+          # the wrapper lives beside the figure it inputs.
           { printf '%s\n' '\documentclass{article}' '\pagestyle{empty}'
             cat /tmp/preamble.tex
             printf '%s\n' '\begin{document}' "\\input{chartjunk-$seed.tex}" '\end{document}'
-          } > "/tmp/doc-$seed.tex"
+          } > "doc-$seed.tex"
           title=$(node -e "const f=require('/tmp/fig.json');const t=f.caption.runs.map(r=>r.k==='cite'?'['+r.ids.join(', ')+']':r.k==='math'?r.text:r.s).join('');console.log(('Figure '+f.seed+': '+t).split('. ')[0].slice(0,120))")
           echo "seed=$seed" >> "$GITHUB_OUTPUT"
           echo "title=$title" >> "$GITHUB_OUTPUT"
@@ -68,7 +70,7 @@ jobs:
         run: |
           seed="${{ steps.gen.outputs.seed }}"
           for i in 1 2 3; do
-            tectonic "/tmp/doc-$seed.tex" --outdir . && break
+            tectonic "doc-$seed.tex" --outdir . && break
             echo "tectonic attempt $i failed; retrying in 30s"
             sleep 30
           done
