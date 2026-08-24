@@ -1,0 +1,49 @@
+{
+  "name": "chartjunk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Placeholder figures for the empirically inclined: seeded, rigorous-looking plots with no data behind them, in SVG, TikZ, HTML, Markdown, or plain text.",
+  "type": "module",
+  "license": "MIT",
+  "author": "MithrilBytes",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MithrilBytes/chartjunk.git"
+  },
+  "homepage": "https://mithrilbytes.github.io/chartjunk/",
+  "keywords": [
+    "lorem-ipsum",
+    "placeholder",
+    "figure",
+    "plot",
+    "svg",
+    "tikz",
+    "pgfplots",
+    "matplotlib",
+    "parody"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "chartjunk": "dist/cli.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
