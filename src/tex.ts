@@ -33,3 +33,22 @@ export function texify(s: string): string {
   for (const [from, to] of CHAR_MAP) out = out.split(from).join(to);
   return out;
 }
+
+/**
+ * Text-mode TeX for a label: specials escaped, math tokens wrapped in
+ * dollars. Multi-character tokens map first so their pieces never split.
+ */
+export function texText(s: string): string {
+  let out = s
+    .replaceAll("\\", "")
+    .replaceAll("%", "\\%")
+    .replaceAll("&", "\\&")
+    .replaceAll("#", "\\#")
+    .replaceAll("_", "\\_")
+    .replaceAll("{", "\\{")
+    .replaceAll("}", "\\}");
+  for (const [from, to] of CHAR_MAP) {
+    out = out.split(from).join(`$${to}$`);
+  }
+  return out.replaceAll("$$", "");
+}
