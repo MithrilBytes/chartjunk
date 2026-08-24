@@ -18,3 +18,46 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - run: npm run build:site
+
+  latex-compiles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Generate figures
+        run: |
+          npx esbuild src/cli.ts --bundle --format=esm --platform=node --outfile=/tmp/cli.mjs
+          node /tmp/cli.mjs --preamble > /tmp/preamble.tex
+          for spec in "line 3" "bar 11" "heatmap 9" "panels 6"; do
+            set -- $spec
+            node /tmp/cli.mjs -k "$1" -s "$2" --junk 0.8 -f tikz -o "/tmp/body-$1.tex"
+            { printf '%s\n' '\documentclass{article}'
+              cat /tmp/preamble.tex
+              printf '%s\n' '\begin{document}' "\\input{/tmp/body-$1.tex}" '\end{document}'
+            } > "/tmp/fig-$1.tex"
+          done
+      - name: Compile with Tectonic
+        uses: wtfjoke/setup-tectonic@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          tectonic-version: "0.17.0"
+      - name: Cache Tectonic packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Tectonic
+          key: tectonic-bundle-${{ runner.os }}
+      - run: |
+          for f in /tmp/fig-*.tex; do
+            echo "== $f"
+            for i in 1 2 3; do
+              tectonic "$f" --outdir /tmp && break
+              echo "tectonic attempt $i failed; retrying in 30s"
+              sleep 30
+            done
+            test -f "/tmp/$(basename "${f%.tex}").pdf" || { echo "missing PDF for $f"; exit 1; }
+          done
