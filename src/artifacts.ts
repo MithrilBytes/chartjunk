@@ -15,24 +15,35 @@ export interface ArtifactSpec {
   /** Panel kinds the gag can attach to; "any" means every plot kind. */
   kinds: readonly PanelKind[] | "any";
   /** Governing dial; null fires whenever applicable. */
-  dial: "density" | "junk" | "confidence" | null;
+  dial: "density" | "junk" | "confidence" | "gobbledygook" | null;
   threshold: number;
 }
 
-const LEGEND_KINDS: readonly PanelKind[] = ["line", "scatter", "bar", "pareto"];
+const LEGEND_KINDS: readonly PanelKind[] = [
+  "line", "scatter", "bar", "pareto", "roc", "profile", "bump", "radar",
+];
+/** Kinds with a bold starred ours; violin puts it on the axis, not a legend. */
+const OURS_KINDS: readonly PanelKind[] = [...LEGEND_KINDS, "violin"];
 
 export const CATALOGUE: Record<ArtifactId, ArtifactSpec> = {
   "orphan-legend": { kinds: LEGEND_KINDS, dial: null, threshold: 0 },
-  "ours-bold": { kinds: LEGEND_KINDS, dial: null, threshold: 0 },
+  "ours-bold": { kinds: OURS_KINDS, dial: null, threshold: 0 },
   "error-bars": { kinds: ["bar", "line"], dial: null, threshold: 0 },
-  "significance-stars": { kinds: ["bar"], dial: null, threshold: 0 },
+  "significance-stars": { kinds: ["bar", "violin"], dial: null, threshold: 0 },
   "r-squared": { kinds: ["scatter"], dial: null, threshold: 0 },
   "infeasible-region": { kinds: ["pareto", "phase", "line"], dial: "junk", threshold: 0.4 },
   "phase-regions": { kinds: ["phase"], dial: null, threshold: 0 },
   "hatched-unstable": { kinds: ["phase"], dial: null, threshold: 0 },
   "colorbar-unit": { kinds: ["heatmap"], dial: null, threshold: 0 },
-  "log-axis": { kinds: ["line", "scatter", "pareto"], dial: "density", threshold: 0.3 },
-  "zero-suppressed": { kinds: ["bar", "line"], dial: "confidence", threshold: 0.6 },
+  "auc-in-legend": { kinds: ["roc"], dial: null, threshold: 0 },
+  "random-diagonal": { kinds: ["roc"], dial: null, threshold: 0 },
+  "rank-inverted": { kinds: ["bump"], dial: null, threshold: 0 },
+  "normalized-to-ours": { kinds: ["radar"], dial: null, threshold: 0 },
+  "kde-from-nothing": { kinds: ["violin"], dial: null, threshold: 0 },
+  "confusion-diagonal": { kinds: ["heatmap"], dial: null, threshold: 0 },
+  "pairwise-grid": { kinds: ["heatmap"], dial: null, threshold: 0 },
+  "log-axis": { kinds: ["line", "scatter", "pareto", "profile"], dial: "density", threshold: 0.3 },
+  "zero-suppressed": { kinds: ["bar", "line", "violin"], dial: "confidence", threshold: 0.6 },
   "gap-arrow": { kinds: ["line", "bar"], dial: "confidence", threshold: 0.7 },
   "theoretical-limit": { kinds: ["pareto", "line"], dial: "junk", threshold: 0.3 },
   "excluded-outlier": { kinds: ["scatter"], dial: "junk", threshold: 0.3 },
@@ -43,15 +54,17 @@ export const CATALOGUE: Record<ArtifactId, ArtifactSpec> = {
   "grid-major": { kinds: "any", dial: "junk", threshold: 0.4 },
   "grid-minor": { kinds: "any", dial: "junk", threshold: 0.7 },
   "broken-axis": { kinds: ["bar"], dial: "junk", threshold: 0.5 },
-  "rotated-ticks": { kinds: ["bar", "heatmap"], dial: "junk", threshold: 0.5 },
+  "rotated-ticks": { kinds: ["bar", "heatmap", "violin"], dial: "junk", threshold: 0.5 },
   "best-viewed-in-color": { kinds: "any", dial: "junk", threshold: 0.5 },
   "legend-over-data": { kinds: LEGEND_KINDS, dial: "junk", threshold: 0.6 },
-  "log-scale-note": { kinds: ["line", "scatter", "pareto"], dial: "junk", threshold: 0.6 },
+  "log-scale-note": { kinds: ["line", "scatter", "pareto", "profile"], dial: "junk", threshold: 0.6 },
   "draft-watermark": { kinds: "any", dial: "junk", threshold: 0.9 },
   "inset-zoom": { kinds: ["line"], dial: "density", threshold: 0.6 },
   "secondary-axis": { kinds: ["line"], dial: "density", threshold: 0.7 },
   "panel-mismatch": { kinds: "any", dial: "density", threshold: 0.5 },
   "orphan-cross-panel": { kinds: "any", dial: "junk", threshold: 0.8 },
+  "extrapolated-region": { kinds: ["line"], dial: "density", threshold: 0.5 },
+  "tsne-axes": { kinds: ["scatter"], dial: "gobbledygook", threshold: 0.4 },
 };
 
 export const ARTIFACT_IDS = Object.keys(CATALOGUE) as ArtifactId[];
@@ -140,4 +153,13 @@ export const ARTIFACT_NOTES: Record<ArtifactId, string> = {
   "secondary-axis": "a second y axis with an unrelated unit",
   "panel-mismatch": "one panel is a different kind with its own legend",
   "orphan-cross-panel": "the orphan legend entry points at a different panel",
+  "auc-in-legend": "AUC quoted to three decimals, computed from nothing",
+  "random-diagonal": "the diagonal marks chance, for readers who forgot",
+  "rank-inverted": "the rank axis runs downhill so first place sits on top",
+  "normalized-to-ours": "every spoke normalized so ours equals 1.0",
+  "kde-from-nothing": "a silky density estimated from three runs",
+  "confusion-diagonal": "the confusion matrix diagonal is proudly dark",
+  "pairwise-grid": "pairwise win rates against a field ours already beat",
+  "extrapolated-region": "the curve continues, dashed, well past the data",
+  "tsne-axes": "the axes are called t-SNE 1 and 2 and mean nothing",
 };

@@ -11,6 +11,7 @@ const CHAR_MAP: readonly [string, string][] = [
   ["a.u.²", "\\mathrm{a.u.}^{2}"],
   ["λ", "\\lambda"],
   ["μ", "\\mu"],
+  ["τ", "\\tau"],
   ["★", "\\star"],
   ["∝", "\\propto"],
   ["√", "\\sqrt "],
@@ -24,7 +25,7 @@ const CHAR_MAP: readonly [string, string][] = [
 
 /** True when the string needs math mode in TeX output. */
 export function needsMath(s: string): boolean {
-  return /[λμ‖×−₂²³∝√·★]/.test(s);
+  return /[λμτ‖×−₂²³∝√·★]/.test(s);
 }
 
 /** Map a Unicode label to TeX math source (no surrounding dollars). */

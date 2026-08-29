@@ -148,6 +148,58 @@ export const HEATMAP_AXES_GOBBLE: readonly [string, string][] = [
   ["Wumpin index", "Nozzle index"], ["Quasi-layer", "Pseudo-head"],
 ];
 
+/** Class names for the confusion-matrix heatmap flavor. */
+export const CLASSES_PLAIN: readonly string[] = [
+  "cat", "dog", "ship", "truck", "bird", "frog",
+];
+export const CLASSES_GOBBLE: readonly string[] = [
+  "wug", "blicket", "quabosh", "snaggle", "nozzle",
+];
+
+/** Radar spokes: capabilities nobody measured. */
+export const SPOKES_PLAIN: readonly string[] = [
+  "Accuracy", "Robustness", "Speed", "Calibration", "Coherence",
+  "Efficiency", "Safety", "Fluency",
+];
+export const SPOKES_GOBBLE: readonly string[] = [
+  "Wumpin-alignment", "Vibes", "Quasi-fidelity", "Nozzle throughput",
+  "Renormalized taste",
+];
+
+/** roc axes; the genre fixes these. */
+export const ROC_X_PLAIN: readonly AxisWord[] = [
+  { label: "False positive rate", betterIs: "lower" },
+];
+export const ROC_X_GOBBLE: readonly AxisWord[] = [
+  { label: "Renormalized false alarm rate", betterIs: "lower" },
+];
+export const ROC_Y_PLAIN: readonly AxisWord[] = [
+  { label: "True positive rate", betterIs: "higher" },
+];
+export const ROC_Y_GOBBLE: readonly AxisWord[] = [
+  { label: "Hyper-recall", betterIs: "higher" },
+];
+
+/** Performance profile axes, after Dolan and More (2002). */
+export const PROFILE_X_PLAIN: readonly AxisWord[] = [
+  { label: "Performance ratio τ", logOk: true, range: [1, 16] },
+  { label: "Time budget", unit: "s", logOk: true, range: [1, 100] },
+];
+export const PROFILE_X_GOBBLE: readonly AxisWord[] = [
+  { label: "Wumpin ratio", logOk: true, range: [1, 16] },
+];
+export const PROFILE_Y_PLAIN: readonly AxisWord[] = [
+  { label: "Fraction of problems solved", betterIs: "higher" },
+  { label: "Fraction of instances", betterIs: "higher" },
+];
+export const PROFILE_Y_GOBBLE: readonly AxisWord[] = [
+  { label: "Quasi-coverage", betterIs: "higher" },
+];
+
+/** Bump chart rounds. */
+export const BUMP_X_PLAIN: readonly string[] = ["Round", "Benchmark version", "Year"];
+export const BUMP_X_GOBBLE: readonly string[] = ["Wumpin season", "Regime epoch"];
+
 /** Stacked above gobbledygook 0.7. Trailing space means a word prefix. */
 export const PREFIXES: readonly string[] = [
   "quasi-", "pseudo-", "hyper-", "renormalized ", "effective ",

@@ -15,6 +15,11 @@ export type Kind =
   | "heatmap"
   | "pareto"
   | "phase"
+  | "roc"
+  | "profile"
+  | "bump"
+  | "radar"
+  | "violin"
   | "panels"
   | "caption";
 
@@ -68,6 +73,8 @@ export interface Series {
   bold: boolean;
   /** Plotted against the panel's secondary axis. */
   y2?: boolean;
+  /** Box statistics inside a violin. */
+  stats?: { median: number; q1: number; q3: number };
 }
 
 export interface LegendEntry {
@@ -171,7 +178,16 @@ export type ArtifactId =
   | "inset-zoom"
   | "secondary-axis"
   | "panel-mismatch"
-  | "orphan-cross-panel";
+  | "orphan-cross-panel"
+  | "auc-in-legend"
+  | "random-diagonal"
+  | "rank-inverted"
+  | "normalized-to-ours"
+  | "kde-from-nothing"
+  | "confusion-diagonal"
+  | "pairwise-grid"
+  | "extrapolated-region"
+  | "tsne-axes";
 
 export interface Figure {
   seed: string;
