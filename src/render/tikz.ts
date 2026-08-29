@@ -71,6 +71,7 @@ function renderAxisEnv(
   fig: Figure, panel: Panel, spec: StyleSpec, w: number, h: number, atX: number, atY: number,
 ): string {
   if (panel.kind === "radar") return renderPolarEnv(fig, panel, spec, w, h, atX, atY);
+  if (panel.kind === "pie") return renderPieTikz(fig, panel, spec, w, h, atX, atY);
   const out: string[] = [];
   // pgfplots reads bare "at" coordinates as points; say cm explicitly.
   const opts: string[] = [
@@ -80,6 +81,7 @@ function renderAxisEnv(
     `height=${cm(h)}cm`,
   ];
   if (panel.kind === "bump") opts.push("y dir=reverse");
+  if (panel.kind === "venn") opts.push("hide axis");
 
   const yCrop = cropLow(panel);
   const [x0, x1] = panel.x.range;
@@ -94,11 +96,11 @@ function renderAxisEnv(
   if (panel.x.tickLabels) {
     const labels = panel.x.tickLabels.map((s, i) => {
       const tex = texText(s);
-      const bold = panel.kind === "violin" && panel.series[i]?.bold;
+      const bold = (panel.kind === "violin" || panel.kind === "waterfall") && panel.series[i]?.bold;
       return bold ? `{\\textbf{${tex}}}` : `{${tex}}`;
     });
     opts.push(`xticklabels={${labels.join(",")}}`);
-    const rotates = panel.kind === "bar" || panel.kind === "heatmap" || panel.kind === "violin";
+    const rotates = panel.kind === "bar" || panel.kind === "heatmap" || panel.kind === "violin" || panel.kind === "waterfall";
     if (fig.artifacts.includes("rotated-ticks") && rotates) {
       opts.push("x tick label style={rotate=45, anchor=east, font=\\tiny}");
     }
@@ -151,9 +153,13 @@ function renderAxisEnv(
 
   out.push(`\\begin{axis}[\n  ${opts.join(",\n  ")}\n]`);
 
+  let regionIdx = 0;
   for (const rg of panel.regions) {
+    const vennFill = `fill=cj${regionIdx % (fig.mono ? spec.monoColors.length : spec.colors.length)}, fill opacity=0.3`;
+    regionIdx += 1;
     const fill = rg.fill === "hatch"
       ? "pattern=north east lines, pattern color=black!45"
+      : panel.kind === "venn" ? vennFill
       : `fill=${romanShade(rg.label)}, fill opacity=${isRoman(rg.label) ? "0.3" : "0.16"}`;
     out.push(
       `\\addplot[draw=none, ${fill}, forget plot] coordinates {` +
@@ -168,11 +174,16 @@ function renderAxisEnv(
 
   for (const e of entries) {
     const color = `cj${e.color % (fig.mono ? spec.monoColors.length : spec.colors.length)}`;
-    const isBar = panel.kind === "bar";
+    const isBar = panel.kind === "bar" || panel.kind === "area";
+    let fillStyle = `fill=${color}`;
+    if (panel.kind === "area" && fig.artifacts.includes("indistinct-colors") && !fig.mono) {
+      const k = panel.series.findIndex((s) => s.id === e.seriesId);
+      if (k >= 0) fillStyle = `fill=cj0!${Math.max(20, 88 - k * 13)}!white`;
+    }
     const style = isBar
       ? fig.mono
         ? `area legend, pattern=${BAR_PATTERNS[e.color % 4]}, pattern color=black!70, draw=black!50`
-        : `area legend, fill=${color}, draw=black!50`
+        : `area legend, ${fillStyle}, draw=black!50`
       : `${color}, ${TIKZ_DASH[e.dash]}, mark=${TIKZ_MARKS[e.marker]}, mark size=1.6pt`;
     out.push(`\\addlegendimage{${style}}`);
     const series = panel.series.find((s) => s.id === e.seriesId);
@@ -215,6 +226,9 @@ function renderAxisEnv(
 
 function renderTikzSeries(fig: Figure, panel: Panel, spec: StyleSpec, yCrop: number): string {
   const out: string[] = [];
+  if (panel.kind === "waterfall") return renderWaterfallTikz(fig, panel, spec);
+  if (panel.kind === "area") return renderAreaTikz(fig, panel, spec);
+  if (panel.kind === "histogram") return renderHistogramTikz(fig, panel, spec);
   if (panel.kind === "heatmap" && panel.matrix) {
     const m = panel.matrix;
     const coords: string[] = [];
@@ -272,6 +286,168 @@ function renderTikzSeries(fig: Figure, panel: Panel, spec: StyleSpec, yCrop: num
       out.push(seriesPlot(fig, s, panel, spec, yCrop));
     }
   }
+  return out.join("\n");
+}
+
+/** Waterfall: floating rectangles, dashed connectors, signed labels. */
+function renderWaterfallTikz(fig: Figure, panel: Panel, spec: StyleSpec): string {
+  const out: string[] = [];
+  let prev: { x: number; y: number } | null = null;
+  panel.series.forEach((s) => {
+    const p = s.points[0];
+    const from = p.lo ?? 0;
+    const color = `cj${s.color % (fig.mono ? spec.monoColors.length : spec.colors.length)}`;
+    const fill = fig.mono
+      ? `pattern=${BAR_PATTERNS[s.color % 4]}, pattern color=black!70`
+      : `fill=${color}`;
+    out.push(
+      `\\draw[draw=black!60, line width=0.4pt, ${fill}] ` +
+      `(axis cs:${num(p.x - 0.31)},${num(from)}) rectangle (axis cs:${num(p.x + 0.31)},${num(p.y)});`,
+    );
+    if (prev) {
+      out.push(
+        `\\draw[black!50, densely dashed, line width=0.4pt] ` +
+        `(axis cs:${num(prev.x + 0.31)},${num(prev.y)}) -- (axis cs:${num(p.x - 0.31)},${num(prev.y)});`,
+      );
+    }
+    prev = { x: p.x, y: p.y };
+    const delta = p.y - from;
+    const label = s.role === "ours" || s.role === "baseline"
+      ? num(Math.round(Math.abs(delta) * 100) / 100)
+      : `${delta >= 0 ? "+" : "-"}${num(Math.round(Math.abs(delta) * 100) / 100)}`;
+    const top = Math.max(from, p.y);
+    const face = s.bold ? `\\textbf{${label}}` : label;
+    out.push(
+      `\\node[font=\\tiny, anchor=south] at (axis cs:${num(p.x)},${num(top)}) {${face}};`,
+    );
+  });
+  return out.join("\n");
+}
+
+/** Stacked area: cumulative polygons, closed and filled in order. */
+function renderAreaTikz(fig: Figure, panel: Panel, spec: StyleSpec): string {
+  const out: string[] = [];
+  const indistinct = fig.artifacts.includes("indistinct-colors") && !fig.mono;
+  const T = panel.series[0]?.points.length ?? 0;
+  const cum: number[] = new Array(T).fill(0);
+  panel.series.forEach((s, k) => {
+    const lower = [...cum];
+    for (let t = 0; t < T; t++) cum[t] += s.points[t].y;
+    const color = `cj${s.color % (fig.mono ? spec.monoColors.length : spec.colors.length)}`;
+    const fill = fig.mono
+      ? `pattern=${BAR_PATTERNS[k % 4]}, pattern color=black!60`
+      : indistinct ? `fill=cj0!${Math.max(20, 88 - k * 13)}!white` : `fill=${color}`;
+    const fwd = s.points.map((p, t) => `(${num(p.x)},${num(Math.min(cum[t], 1))})`);
+    const back = [...s.points].reverse().map((p, ti) => `(${num(p.x)},${num(lower[T - 1 - ti])})`);
+    out.push(
+      `\\addplot[draw=white, line width=0.3pt, ${fill}, forget plot] coordinates {` +
+      [...fwd, ...back].join(" ") + "} --cycle;",
+    );
+  });
+  return out.join("\n");
+}
+
+/** Histograms: translucent full-width bins plus their silky densities. */
+function renderHistogramTikz(fig: Figure, panel: Panel, spec: StyleSpec): string {
+  const out: string[] = [];
+  const bars = panel.series.filter((s) => s.draw === "bar");
+  for (const s of bars) {
+    const color = `cj${s.color % (fig.mono ? spec.monoColors.length : spec.colors.length)}`;
+    const binW = s.points.length > 1 ? s.points[1].x - s.points[0].x : 0.1;
+    for (const p of s.points) {
+      out.push(
+        `\\draw[draw=${color}, line width=0.3pt, fill=${color}, fill opacity=0.4] ` +
+        `(axis cs:${num(p.x - binW * 0.49)},0) rectangle (axis cs:${num(p.x + binW * 0.49)},${num(p.y)});`,
+      );
+    }
+  }
+  for (const s of panel.series) {
+    if (s.draw !== "line") continue;
+    out.push(seriesPlot(fig, s, panel, spec, 0));
+  }
+  return out.join("\n");
+}
+
+/** The pie: raw arcs in plain TikZ, no axis environment at all. */
+function renderPieTikz(
+  fig: Figure, panel: Panel, spec: StyleSpec, w: number, h: number, atX: number, atY: number,
+): string {
+  const out: string[] = [];
+  const R = Math.min(w, h) * 0.34;
+  const cx = atX + w / 2;
+  const cy = atY - h / 2;
+  const donut = fig.artifacts.includes("hole-number");
+  const r0 = donut ? R * 0.55 : 0;
+  const values = panel.series.map((s) => s.points[0].y);
+  const total = values.reduce((a, b) => a + b, 0);
+  const other = values.indexOf(Math.max(...values));
+
+  let deg = 90;
+  panel.series.forEach((s, i) => {
+    const sweep = (values[i] / total) * 360;
+    const a0 = deg;
+    const a1 = deg - sweep;
+    deg = a1;
+    const mid = (a0 + a1) / 2;
+    const off = i === other ? 0.16 : 0;
+    const ox = cx + off * Math.cos((mid * Math.PI) / 180);
+    const oy = cy + off * Math.sin((mid * Math.PI) / 180);
+    const color = `cj${s.color % (fig.mono ? spec.monoColors.length : spec.colors.length)}`;
+    const fill = fig.mono
+      ? `pattern=${BAR_PATTERNS[i % 4]}, pattern color=black!70`
+      : `fill=${color}`;
+    if (r0 > 0) {
+      out.push(
+        `\\draw[draw=white, line width=0.8pt, ${fill}] ` +
+        `(${cm(ox)}, ${cm(oy)}) ++(${num(a0)}:${cm(r0)}) -- ++(${num(a0)}:${cm(R - r0)}) ` +
+        `arc[start angle=${num(a0)}, end angle=${num(a1)}, radius=${cm(R)}] ` +
+        `-- ++(${num(a1 + 180)}:${cm(R - r0)}) ` +
+        `arc[start angle=${num(a1)}, end angle=${num(a0)}, radius=${cm(r0)}] -- cycle;`,
+      );
+    } else {
+      out.push(
+        `\\draw[draw=white, line width=0.8pt, ${fill}] (${cm(ox)}, ${cm(oy)}) -- ` +
+        `++(${num(a0)}:${cm(R)}) arc[start angle=${num(a0)}, end angle=${num(a1)}, radius=${cm(R)}] -- cycle;`,
+      );
+    }
+    const frac = values[i] / total;
+    const label = `${values[i].toFixed(1)}\\%`;
+    const midRad = (mid * Math.PI) / 180;
+    if (frac > 0.09) {
+      const lr = r0 > 0 ? (r0 + R) / 2 : R * 0.62;
+      out.push(
+        `\\node[font=\\tiny${fig.mono ? "" : ", text=white"}] at ` +
+        `(${cm(ox + lr * Math.cos(midRad))}, ${cm(oy + lr * Math.sin(midRad))}) {${label}};`,
+      );
+    } else {
+      out.push(
+        `\\draw[black!50, line width=0.3pt] (${cm(ox)}, ${cm(oy)}) ++(${num(mid)}:${cm(R)}) -- ++(${num(mid)}:0.25);`,
+      );
+      out.push(
+        `\\node[font=\\tiny, anchor=${Math.cos(midRad) > 0 ? "west" : "east"}] at ` +
+        `(${cm(ox + (R + 0.35) * Math.cos(midRad))}, ${cm(oy + (R + 0.35) * Math.sin(midRad))}) {${label}};`,
+      );
+    }
+  });
+
+  if (donut) {
+    const hole = panel.annotations.find((a) => a.type === "text" && a.text.startsWith("n = "));
+    if (hole && hole.type === "text") {
+      out.push(`\\node[font=\\small\\bfseries] at (${cm(cx)}, ${cm(cy)}) {${texText(hole.text)}};`);
+    }
+  }
+
+  const entries = panel.legend.entries;
+  entries.forEach((e, i) => {
+    const color = `cj${e.color % (fig.mono ? spec.monoColors.length : spec.colors.length)}`;
+    const swatch = fig.mono
+      ? `pattern=${BAR_PATTERNS[i % 4]}, pattern color=black!70`
+      : `fill=${color}`;
+    const ly = cy + h * 0.32 - i * 0.42;
+    const lx = atX + w - 0.2;
+    out.push(`\\draw[draw=black!50, line width=0.3pt, ${swatch}] (${cm(lx - 2.6)}, ${cm(ly)}) rectangle ++(0.28, 0.2);`);
+    out.push(`\\node[font=\\tiny, anchor=west] at (${cm(lx - 2.2)}, ${cm(ly + 0.1)}) {${texText(e.label)}};`);
+  });
   return out.join("\n");
 }
 

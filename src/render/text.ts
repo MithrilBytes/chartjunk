@@ -58,6 +58,18 @@ function renderPanelText(fig: Figure, panel: Panel, withLegend: boolean): string
   if (panel.kind === "violin") {
     return renderViolinText(panel);
   }
+  if (panel.kind === "pie") {
+    return renderPieText(panel);
+  }
+  if (panel.kind === "waterfall") {
+    return renderWaterfallText(panel);
+  }
+  if (panel.kind === "area") {
+    return renderAreaText(panel);
+  }
+  if (panel.kind === "venn") {
+    return renderVennText(panel);
+  }
 
   // Regions shade sparsely so series stay legible.
   for (const rg of panel.regions) {
@@ -77,7 +89,7 @@ function renderPanelText(fig: Figure, panel: Panel, withLegend: boolean): string
   }
 
   const bars = panel.series.filter((s) => s.draw === "bar");
-  if (bars.length > 0) {
+  if (bars.length > 0 && panel.kind !== "histogram") {
     drawBars(grid, panel, bars, nx, ny);
   }
 
@@ -265,6 +277,69 @@ function renderViolinText(panel: Panel): string[] {
     lines.push(label.padEnd(21) + row.join(""));
   });
   lines.push(" ".repeat(21) + `${fmtTick(y0, false)}`.padEnd(scaleW - 6) + `${fmtTick(y1, false)}`);
+  return lines.map((l) => l.slice(0, WIDTH));
+}
+
+/** Pie in 72 columns: a bar of blocks per slice, Other last and largest. */
+function renderPieText(panel: Panel): string[] {
+  const lines: string[] = [];
+  const donut = panel.annotations.find((a) => a.type === "text" && a.text.startsWith("n = "));
+  lines.push("Share by category" + (donut && donut.type === "text" ? `  (${donut.text})` : ""));
+  for (const s of panel.series) {
+    const pct = s.points[0].y;
+    const blocks = "█".repeat(Math.max(1, Math.round(pct / 2.5)));
+    lines.push(`${s.label.slice(0, 20).padEnd(21)}${blocks} ${pct.toFixed(1)}%`);
+  }
+  const total = panel.series.reduce((a, s) => a + s.points[0].y, 0);
+  lines.push("".padEnd(21) + `total ${total.toFixed(1)}%`);
+  if (panel.legend.entries.some((e) => e.seriesId === null)) {
+    const orphan = panel.legend.entries.find((e) => e.seriesId === null);
+    if (orphan) lines.push(`(legend also lists: ${orphan.label})`);
+  }
+  return lines.map((l) => l.slice(0, WIDTH));
+}
+
+/** Waterfall in 72 columns: signed steps, then the total that disagrees. */
+function renderWaterfallText(panel: Panel): string[] {
+  const lines: string[] = [];
+  for (const s of panel.series) {
+    const p = s.points[0];
+    const from = p.lo ?? 0;
+    const delta = p.y - from;
+    const isTotal = s.role === "ours" || s.role === "baseline";
+    const shown = isTotal ? p.y : delta;
+    const sign = isTotal ? " " : shown >= 0 ? "+" : "−";
+    const blocks = "█".repeat(Math.max(1, Math.round(Math.abs(shown) * 30)));
+    lines.push(`${s.label.slice(0, 22).padEnd(23)}${sign}${Math.abs(shown).toFixed(2)} ${blocks}`);
+  }
+  return lines.map((l) => l.slice(0, WIDTH));
+}
+
+/** Stacked area in 72 columns: first and final shares per component. */
+function renderAreaText(panel: Panel): string[] {
+  const lines: string[] = [];
+  lines.push("Component".padEnd(21) + "start".padEnd(12) + "end");
+  for (const s of panel.series) {
+    const first = s.points[0].y;
+    const last = s.points[s.points.length - 1].y;
+    const bar = (v: number): string => "▓".repeat(Math.max(1, Math.round(v * 16)));
+    lines.push(
+      `${s.label.slice(0, 20).padEnd(21)}${(first * 100).toFixed(0).padStart(3)}% ${bar(first)}`.padEnd(45).slice(0, 45) +
+      ` ${(last * 100).toFixed(0).padStart(3)}% ${bar(last)}`,
+    );
+  }
+  return lines.map((l) => l.slice(0, WIDTH));
+}
+
+/** Venn in 72 columns: the counts as a list; the circles are implied. */
+function renderVennText(panel: Panel): string[] {
+  const lines: string[] = [];
+  const sets = panel.regions.map((r) => r.label);
+  lines.push(`Overlap of ${sets.join(", ")}`);
+  const counts = panel.annotations
+    .filter((a) => a.type === "text" && !a.boxed && /^\d+$/.test(a.text))
+    .map((a) => (a.type === "text" ? a.text : ""));
+  lines.push(...wrap(`region counts: ${counts.join(", ")}`));
   return lines.map((l) => l.slice(0, WIDTH));
 }
 

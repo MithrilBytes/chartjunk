@@ -3,7 +3,7 @@
  * small; every color, dash, and marker comes from styles.ts so TikZ agrees.
  */
 import type {
-  Annotation, Axis, Caption, Figure, Legend, Panel, Point, Region, Run, Series,
+  Annotation, Axis, Caption, Figure, Legend, LegendEntry, Panel, Point, Region, Run, Series,
 } from "../types.js";
 import { STYLES, type StyleSpec, dashArray, seriesColor } from "../styles.js";
 
@@ -122,15 +122,16 @@ interface Frame {
 
 function renderPanel(fig: Figure, panel: Panel, spec: StyleSpec, W: number, H: number, index: number): string {
   if (panel.kind === "radar") return renderRadarPanel(fig, panel, spec, W, H);
+  if (panel.kind === "pie") return renderPiePanel(fig, panel, spec, W, H);
   const rotated = fig.artifacts.includes("rotated-ticks")
-    && (panel.kind === "bar" || panel.kind === "heatmap" || panel.kind === "violin");
+    && (panel.kind === "bar" || panel.kind === "heatmap" || panel.kind === "violin" || panel.kind === "waterfall");
   const legendOutside = panel.legend.entries.length > 0 && panel.legend.position === "outside";
   const legendW = legendOutside ? legendWidth(panel.legend) : 0;
   const colorbarW = panel.kind === "heatmap" ? 46 : 0;
   const left = 46;
   const right = W - 12 - (panel.y2 ? 34 : 0) - legendW - colorbarW;
   const top = 14;
-  const bottom = H - 36 - (rotated ? 14 : 0);
+  const bottom = H - 36 - (rotated ? 40 : 0);
   const plotW = right - left;
   const plotH = bottom - top;
 
@@ -162,7 +163,7 @@ function renderPanel(fig: Figure, panel: Panel, spec: StyleSpec, W: number, H: n
   out.push(renderAnnotations(fig, panel, spec, frame));
   out.push(`</g>`);
   if (panel.kind === "heatmap") out.push(renderColorbar(fig, panel, frame));
-  out.push(renderAxes(fig, panel, spec, frame, rotated));
+  if (panel.kind !== "venn") out.push(renderAxes(fig, panel, spec, frame, rotated));
   if (panel.legend.entries.length > 0) out.push(renderLegend(fig, panel, spec, frame, legendOutside));
   if (panel.label) {
     out.push(text(left - 34, top + 2, panel.label, 11, `font-weight="600"`));
@@ -333,7 +334,7 @@ function renderAxes(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame, rotate
   // Axis titles.
   const xTitle = axisTitle(panel.x);
   const yTitle = axisTitle(panel.y);
-  out.push(textAnchored((f.left + f.right) / 2, f.bottom + (rotated ? 38 : 28), xTitle, 10, "middle", `fill="${axCol}"`));
+  out.push(textAnchored((f.left + f.right) / 2, f.bottom + (rotated ? 52 : 28), xTitle, 10, "middle", `fill="${axCol}"`));
   out.push(
     `<text x="${fmt(f.left - 34)}" y="${fmt((f.top + f.bottom) / 2)}" font-size="10" fill="${axCol}" ` +
     `text-anchor="middle" transform="rotate(-90 ${fmt(f.left - 34)} ${fmt((f.top + f.bottom) / 2)})">` +
@@ -396,8 +397,11 @@ function renderRegions(fig: Figure, panel: Panel, f: Frame): string {
     const pts = rg.polygon.map((p) => `${fmt(f.px(p.x))},${fmt(f.py(p.y))}`).join(" ");
     const fill = rg.fill === "hatch"
       ? `url(#hatch${i % 4})`
+      : panel.kind === "venn" ? seriesColor(fig.style, fig.mono, i)
       : romans.has(rg.label) ? regionShade(i) : "#9e9e9e";
-    const op = rg.fill === "hatch" ? "0.55" : romans.has(rg.label) ? "0.30" : "0.18";
+    const op = rg.fill === "hatch" ? "0.55"
+      : panel.kind === "venn" ? "0.3"
+      : romans.has(rg.label) ? "0.30" : "0.18";
     out.push(`<polygon points="${pts}" fill="${fill}" opacity="${op}"/>`);
     const c = centroid(rg.polygon);
     out.push(textAnchored(f.px(c.x), f.py(c.y), rg.label, 9.5, "middle", `fill="#555555" font-style="italic"`));
@@ -412,6 +416,9 @@ function regionShade(i: number): string {
 
 function renderSeries(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame): string {
   if (panel.kind === "heatmap") return "";
+  if (panel.kind === "waterfall") return renderWaterfallSeries(fig, panel, f);
+  if (panel.kind === "area") return renderAreaSeries(fig, panel, f);
+  if (panel.kind === "histogram") return renderHistogramSeries(fig, panel, spec, f);
   const out: string[] = [];
   const lw = spec.lineWidth;
 
@@ -498,10 +505,13 @@ function renderSeries(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame): str
         (da ? ` stroke-dasharray="${da}"` : "") + ` stroke-linejoin="round"/>`,
       );
     }
+    const bubbles = panel.kind === "scatter" && s.draw === "scatter"
+      && s.role !== "reference" && fig.artifacts.includes("bubble-sizes");
     if (s.marker !== "none" && s.role !== "reference") {
-      for (const p of s.points) {
-        out.push(markerGlyph(s.marker, f.px(p.x), py(p.y), 3.1, color));
-      }
+      s.points.forEach((p, i) => {
+        const r = bubbles ? 2 + 4 * ((((i + 1) * 2654435761) >>> 0) % 997) / 997 : 3.1;
+        out.push(markerGlyph(s.marker, f.px(p.x), py(p.y), r, color));
+      });
     }
     if (s.draw === "scatter" && s.role === "reference") {
       for (const p of s.points) {
@@ -621,6 +631,194 @@ function renderColorbar(fig: Figure, panel: Panel, f: Frame): string {
     `${escapeXml(cbTitle)}</text>`,
   );
   return out.join("\n");
+}
+
+/* ------------------------------------------------------------------ */
+/* Waterfall, area, histogram                                          */
+/* ------------------------------------------------------------------ */
+
+function renderWaterfallSeries(fig: Figure, panel: Panel, f: Frame): string {
+  const out: string[] = [];
+  const groupW = f.px(1) - f.px(0);
+  const barW = groupW * 0.62;
+  let prevTopX = 0;
+  let prevTop = 0;
+  panel.series.forEach((s, i) => {
+    const p = s.points[0];
+    const from = p.lo ?? 0;
+    const color = seriesColor(fig.style, fig.mono, s.color);
+    const xc = f.px(p.x);
+    const yA = f.py(Math.max(from, p.y));
+    const yB = f.py(Math.min(from, p.y));
+    out.push(rect(xc - barW / 2, yA, barW, Math.max(Math.abs(yB - yA), 1),
+      `fill="${fig.mono ? `url(#hatch${s.color % 4})` : color}" stroke="#262626" stroke-width="0.6"`));
+    // Dashed connector from the previous bar's landing height.
+    if (i > 0) {
+      out.push(line(prevTopX + barW / 2, prevTop, xc - barW / 2, prevTop,
+        `stroke="#8c8c8c" stroke-width="0.7" stroke-dasharray="3,2"`));
+    }
+    prevTopX = xc;
+    prevTop = f.py(p.y);
+    // Signed value label above the bar.
+    const delta = p.y - from;
+    const label = s.role === "ours" || s.role === "baseline"
+      ? fmt(Math.abs(delta))
+      : `${delta >= 0 ? "+" : "−"}${fmt(Math.abs(delta))}`;
+    out.push(textAnchored(xc, Math.min(yA, prevTop) - 4, label, 8, "middle",
+      `fill="#262626"${s.bold ? ` font-weight="600"` : ""}`));
+  });
+  return out.join("\n");
+}
+
+function renderAreaSeries(fig: Figure, panel: Panel, f: Frame): string {
+  const out: string[] = [];
+  const indistinct = fig.artifacts.includes("indistinct-colors") && !fig.mono;
+  const base = seriesColor(fig.style, fig.mono, 0);
+  const T = panel.series[0]?.points.length ?? 0;
+  const cum: number[] = new Array(T).fill(0);
+  panel.series.forEach((s, k) => {
+    const lower = [...cum];
+    for (let t = 0; t < T; t++) cum[t] += s.points[t].y;
+    const fill = fig.mono
+      ? `url(#hatch${k % 4})`
+      : indistinct ? lighten(base, 0.1 + 0.13 * k) : seriesColor(fig.style, fig.mono, s.color);
+    const fwd = s.points.map((p, t) => `${fmt(f.px(p.x))},${fmt(f.py(Math.min(cum[t], 1)))}`);
+    const back = [...s.points].reverse().map((p, ti) =>
+      `${fmt(f.px(p.x))},${fmt(f.py(lower[T - 1 - ti]))}`);
+    out.push(`<polygon points="${[...fwd, ...back].join(" ")}" fill="${fill}" ` +
+      `stroke="#ffffff" stroke-width="0.6"/>`);
+  });
+  return out.join("\n");
+}
+
+function renderHistogramSeries(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame): string {
+  const out: string[] = [];
+  const bars = panel.series.filter((s) => s.draw === "bar");
+  for (const s of bars) {
+    const color = seriesColor(fig.style, fig.mono, s.color);
+    const binW = s.points.length > 1 ? f.px(s.points[1].x) - f.px(s.points[0].x) : 10;
+    for (const p of s.points) {
+      const y = f.py(p.y);
+      out.push(rect(f.px(p.x) - binW / 2 + 0.5, y, binW - 1, Math.max(f.bottom - y, 0),
+        `fill="${color}" opacity="0.45" stroke="${color}" stroke-width="0.5"`));
+    }
+  }
+  for (const s of panel.series) {
+    if (s.draw !== "line") continue;
+    const color = seriesColor(fig.style, fig.mono, s.color);
+    const pts = s.points.map((p) => `${fmt(f.px(p.x))},${fmt(f.py(p.y))}`).join(" ");
+    out.push(`<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="${fmt(spec.lineWidth)}" stroke-linejoin="round"/>`);
+  }
+  return out.join("\n");
+}
+
+/* ------------------------------------------------------------------ */
+/* Pie                                                                 */
+/* ------------------------------------------------------------------ */
+
+function renderPiePanel(fig: Figure, panel: Panel, spec: StyleSpec, W: number, H: number): string {
+  const out: string[] = [];
+  const entries = panel.legend.entries;
+  const legendW = entries.length > 0 ? legendWidth(panel.legend) : 0;
+  const cx = (W - legendW) / 2;
+  const cy = (H - 24) / 2 + 2;
+  const R = Math.max(Math.min(cx - 40, cy - 26), 40);
+  const donut = fig.artifacts.includes("hole-number");
+  const rInner = donut ? R * 0.55 : 0;
+
+  const values = panel.series.map((s) => s.points[0].y);
+  const total = values.reduce((a, b) => a + b, 0);
+  const other = values.indexOf(Math.max(...values));
+
+  // Optional polar grid over the pie, in the finest tradition.
+  if (fig.artifacts.includes("grid-major")) {
+    for (const t of [0.5, 1]) {
+      out.push(`<circle cx="${fmt(cx)}" cy="${fmt(cy)}" r="${fmt(R * t + 6)}" fill="none" stroke="${spec.gridColor}" stroke-width="0.6" opacity="0.7"/>`);
+    }
+  }
+
+  let angle = -Math.PI / 2;
+  panel.series.forEach((s, i) => {
+    const frac = values[i] / total;
+    const a0 = angle;
+    const a1 = angle + frac * 2 * Math.PI;
+    angle = a1;
+    const mid = (a0 + a1) / 2;
+    // Other explodes outward, proud of its size.
+    const off = i === other ? 7 : 0;
+    const ox = cx + off * Math.cos(mid);
+    const oy = cy + off * Math.sin(mid);
+    const color = fig.mono ? `url(#hatch${i % 4})` : seriesColor(fig.style, fig.mono, s.color);
+    out.push(slicePath(ox, oy, rInner, R, a0, a1, color));
+    // Percent labels: inside when the slice can hold them, else led outside.
+    const label = `${s.points[0].y.toFixed(1)}%`;
+    if (frac > 0.09) {
+      const lr = rInner > 0 ? (rInner + R) / 2 : R * 0.62;
+      out.push(textAnchored(ox + lr * Math.cos(mid), oy + lr * Math.sin(mid) + 3, label, 8.5,
+        "middle", `fill="${fig.mono ? "#111111" : "#ffffff"}" font-weight="600"`));
+    } else {
+      const lx = ox + (R + 12) * Math.cos(mid);
+      const ly = oy + (R + 12) * Math.sin(mid);
+      out.push(line(ox + R * Math.cos(mid), oy + R * Math.sin(mid), lx, ly,
+        `stroke="#8c8c8c" stroke-width="0.6"`));
+      out.push(textAnchored(lx + (Math.cos(mid) > 0 ? 2 : -2), ly + 3, label, 8,
+        Math.cos(mid) > 0 ? "start" : "end", `fill="#262626"`));
+    }
+  });
+
+  if (donut) {
+    const holeText = panel.annotations.find((a) => a.type === "text" && a.text.startsWith("n = "));
+    if (holeText && holeText.type === "text") {
+      out.push(textAnchored(cx, cy + 5, holeText.text, 14, "middle", `fill="#262626" font-weight="600"`));
+    }
+  }
+
+  for (const a of panel.annotations) {
+    if (a.type === "text" && a.boxed) {
+      const w = a.text.length * 4.6 + 8;
+      out.push(rect(cx - w / 2, cy + R * 0.35, w, 13, `fill="#ffffff" stroke="#262626" stroke-width="0.7" opacity="0.92"`));
+      out.push(textAnchored(cx, cy + R * 0.35 + 9.5, a.text, 8.5, "middle", `fill="#262626"`));
+    }
+  }
+
+  if (entries.length > 0) {
+    const lh = 13;
+    const lx = W - legendW - 6;
+    const overData = panel.legend.position === "over-data";
+    const ax = overData ? cx - legendW / 2 : lx;
+    const ay = overData ? cy - (entries.length * lh) / 2 : 10;
+    out.push(rect(ax, ay, legendW, entries.length * lh + 8,
+      `fill="#ffffff" opacity="0.9"` + (spec.legendBox ? ` stroke="#8c8c8c" stroke-width="0.7"` : "")));
+    entries.forEach((e, i) => {
+      const ey = ay + 10 + i * lh;
+      const color = seriesColor(fig.style, fig.mono, e.color);
+      out.push(rect(ax + 6, ey - 5, 10, 8, `fill="${fig.mono ? `url(#hatch${i % 4})` : color}" stroke="#262626" stroke-width="0.4"`));
+      out.push(textAnchored(ax + 21, ey + 2, e.label, 8.5, "start", `fill="#262626"`));
+    });
+  }
+  return out.join("\n");
+}
+
+function slicePath(cx: number, cy: number, r0: number, r1: number, a0: number, a1: number, fill: string): string {
+  const large = a1 - a0 > Math.PI ? 1 : 0;
+  const x0 = cx + r1 * Math.cos(a0);
+  const y0 = cy + r1 * Math.sin(a0);
+  const x1 = cx + r1 * Math.cos(a1);
+  const y1 = cy + r1 * Math.sin(a1);
+  if (r0 <= 0) {
+    return `<path d="M ${fmt(cx)} ${fmt(cy)} L ${fmt(x0)} ${fmt(y0)} ` +
+      `A ${fmt(r1)} ${fmt(r1)} 0 ${large} 1 ${fmt(x1)} ${fmt(y1)} Z" ` +
+      `fill="${fill}" stroke="#ffffff" stroke-width="1"/>`;
+  }
+  const ix0 = cx + r0 * Math.cos(a1);
+  const iy0 = cy + r0 * Math.sin(a1);
+  const ix1 = cx + r0 * Math.cos(a0);
+  const iy1 = cy + r0 * Math.sin(a0);
+  return `<path d="M ${fmt(x0)} ${fmt(y0)} ` +
+    `A ${fmt(r1)} ${fmt(r1)} 0 ${large} 1 ${fmt(x1)} ${fmt(y1)} ` +
+    `L ${fmt(ix0)} ${fmt(iy0)} ` +
+    `A ${fmt(r0)} ${fmt(r0)} 0 ${large} 0 ${fmt(ix1)} ${fmt(iy1)} Z" ` +
+    `fill="${fill}" stroke="#ffffff" stroke-width="1"/>`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -886,9 +1084,9 @@ function renderLegend(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame, outs
     const ey = y + 6 + i * lh + 4;
     const color = seriesColor(fig.style, fig.mono, e.color);
     const da = dashArray(e.dash, 1.4);
-    const isBar = panel.kind === "bar";
+    const isBar = panel.kind === "bar" || panel.kind === "area" || panel.kind === "venn";
     if (isBar) {
-      out.push(rect(x + 6, ey - 4.5, 12, 8, `fill="${fig.mono ? `url(#hatch${i % 4})` : color}" stroke="#262626" stroke-width="0.5"`));
+      out.push(rect(x + 6, ey - 4.5, 12, 8, `fill="${legendSwatchFill(fig, panel, e, i)}" stroke="#262626" stroke-width="0.5"`));
     } else {
       out.push(line(x + 5, ey, x + 21, ey, `stroke="${color}" stroke-width="1.6"` + (da ? ` stroke-dasharray="${da}"` : "")));
       out.push(markerGlyph(e.marker, x + 13, ey, 2.7, color));
@@ -898,6 +1096,16 @@ function renderLegend(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame, outs
     out.push(textAnchored(x + 26, ey + 3, e.label, 8.5, "start", `fill="#262626"${bold}`));
   });
   return out.join("\n");
+}
+
+/** Swatch fill that matches what the plot actually drew. */
+function legendSwatchFill(fig: Figure, panel: Panel, e: LegendEntry, i: number): string {
+  if (fig.mono) return `url(#hatch${i % 4})`;
+  if (panel.kind === "area" && fig.artifacts.includes("indistinct-colors")) {
+    const k = panel.series.findIndex((s) => s.id === e.seriesId);
+    if (k >= 0) return lighten(seriesColor(fig.style, fig.mono, 0), 0.1 + 0.13 * k);
+  }
+  return seriesColor(fig.style, fig.mono, e.color);
 }
 
 /** Corner with the fewest data points; deterministic "best" placement. */
