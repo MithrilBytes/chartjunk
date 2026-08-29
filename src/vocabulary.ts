@@ -200,6 +200,44 @@ export const PROFILE_Y_GOBBLE: readonly AxisWord[] = [
 export const BUMP_X_PLAIN: readonly string[] = ["Round", "Benchmark version", "Year"];
 export const BUMP_X_GOBBLE: readonly string[] = ["Wumpin season", "Regime epoch"];
 
+/** Pie slices: what went wrong, allegedly. */
+export const SLICES_PLAIN: readonly string[] = [
+  "label noise", "timeouts", "out of memory", "user error", "hard cases",
+  "ambiguous", "annotation drift",
+];
+export const SLICES_GOBBLE: readonly string[] = [
+  "Wumpin leakage", "quasi-failures", "nozzle faults", "vibes",
+];
+
+/** Stacked area components: where the budget went. */
+export const COMPONENTS_PLAIN: readonly string[] = [
+  "attention", "feedforward", "data loading", "optimizer", "logging",
+  "checkpointing", "evaluation",
+];
+export const COMPONENTS_GOBBLE: readonly string[] = [
+  "renormalization", "Wumpin upkeep", "quasi-overhead", "nozzle idle",
+];
+
+/** Waterfall contributions, in order of claimed importance. */
+export const CONTRIBUTIONS_PLAIN: readonly string[] = [
+  "pretraining", "augmentation", "tuning", "warm restarts", "ensembling",
+  "longer training", "a larger model",
+];
+export const CONTRIBUTIONS_GOBBLE: readonly string[] = [
+  "the Wumpin term", "renormalization", "quasi-init", "vibes",
+];
+export const NEGATIVE_CONTRIBUTIONS: readonly string[] = [
+  "honesty", "the regression fix", "reviewer 2", "reproducibility",
+];
+
+/** Venn set names. */
+export const SETS_PLAIN: readonly string[] = [
+  "Train", "Test", "Held-out", "Benchmark", "Prior work",
+];
+export const SETS_GOBBLE: readonly string[] = [
+  "Wumpin-9", "Snaggle-XL", "Quasi-set",
+];
+
 /** Stacked above gobbledygook 0.7. Trailing space means a word prefix. */
 export const PREFIXES: readonly string[] = [
   "quasi-", "pseudo-", "hyper-", "renormalized ", "effective ",

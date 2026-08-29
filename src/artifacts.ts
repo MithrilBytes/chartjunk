@@ -21,15 +21,19 @@ export interface ArtifactSpec {
 
 const LEGEND_KINDS: readonly PanelKind[] = [
   "line", "scatter", "bar", "pareto", "roc", "profile", "bump", "radar",
+  "pie", "area", "histogram", "venn",
 ];
-/** Kinds with a bold starred ours; violin puts it on the axis, not a legend. */
-const OURS_KINDS: readonly PanelKind[] = [...LEGEND_KINDS, "violin"];
+/** Kinds with a bold starred ours; the composition kinds have no methods. */
+const OURS_KINDS: readonly PanelKind[] = [
+  "line", "scatter", "bar", "pareto", "roc", "profile", "bump", "radar",
+  "violin", "histogram", "waterfall",
+];
 
 export const CATALOGUE: Record<ArtifactId, ArtifactSpec> = {
   "orphan-legend": { kinds: LEGEND_KINDS, dial: null, threshold: 0 },
   "ours-bold": { kinds: OURS_KINDS, dial: null, threshold: 0 },
   "error-bars": { kinds: ["bar", "line"], dial: null, threshold: 0 },
-  "significance-stars": { kinds: ["bar", "violin"], dial: null, threshold: 0 },
+  "significance-stars": { kinds: ["bar", "violin", "waterfall"], dial: null, threshold: 0 },
   "r-squared": { kinds: ["scatter"], dial: null, threshold: 0 },
   "infeasible-region": { kinds: ["pareto", "phase", "line"], dial: "junk", threshold: 0.4 },
   "phase-regions": { kinds: ["phase"], dial: null, threshold: 0 },
@@ -54,7 +58,7 @@ export const CATALOGUE: Record<ArtifactId, ArtifactSpec> = {
   "grid-major": { kinds: "any", dial: "junk", threshold: 0.4 },
   "grid-minor": { kinds: "any", dial: "junk", threshold: 0.7 },
   "broken-axis": { kinds: ["bar"], dial: "junk", threshold: 0.5 },
-  "rotated-ticks": { kinds: ["bar", "heatmap", "violin"], dial: "junk", threshold: 0.5 },
+  "rotated-ticks": { kinds: ["bar", "heatmap", "violin", "waterfall"], dial: "junk", threshold: 0.5 },
   "best-viewed-in-color": { kinds: "any", dial: "junk", threshold: 0.5 },
   "legend-over-data": { kinds: LEGEND_KINDS, dial: "junk", threshold: 0.6 },
   "log-scale-note": { kinds: ["line", "scatter", "pareto", "profile"], dial: "junk", threshold: 0.6 },
@@ -65,6 +69,15 @@ export const CATALOGUE: Record<ArtifactId, ArtifactSpec> = {
   "orphan-cross-panel": { kinds: "any", dial: "junk", threshold: 0.8 },
   "extrapolated-region": { kinds: ["line"], dial: "density", threshold: 0.5 },
   "tsne-axes": { kinds: ["scatter"], dial: "gobbledygook", threshold: 0.4 },
+  "other-largest": { kinds: ["pie"], dial: null, threshold: 0 },
+  "sum-drift": { kinds: ["pie"], dial: null, threshold: 0 },
+  "hole-number": { kinds: ["pie"], dial: null, threshold: 0 },
+  "contributions-exceed": { kinds: ["waterfall"], dial: null, threshold: 0 },
+  "other-grows": { kinds: ["area"], dial: null, threshold: 0 },
+  "indistinct-colors": { kinds: ["area"], dial: null, threshold: 0 },
+  "smoothed-histogram": { kinds: ["histogram"], dial: null, threshold: 0 },
+  "counts-drift": { kinds: ["venn"], dial: null, threshold: 0 },
+  "bubble-sizes": { kinds: ["scatter"], dial: "junk", threshold: 0.3 },
 };
 
 export const ARTIFACT_IDS = Object.keys(CATALOGUE) as ArtifactId[];
@@ -162,4 +175,13 @@ export const ARTIFACT_NOTES: Record<ArtifactId, string> = {
   "pairwise-grid": "pairwise win rates against a field ours already beat",
   "extrapolated-region": "the curve continues, dashed, well past the data",
   "tsne-axes": "the axes are called t-SNE 1 and 2 and mean nothing",
+  "other-largest": "the largest slice of the pie is Other",
+  "sum-drift": "the percentages do not sum to 100, due to rounding, allegedly",
+  "hole-number": "the donut hole holds a big number related to nothing",
+  "contributions-exceed": "the ablation contributions sum past the total gain",
+  "other-grows": "Other quietly swallows the whole chart by the end",
+  "indistinct-colors": "six adjacent components share one indistinguishable hue",
+  "smoothed-histogram": "a silky density drawn over a handful of samples",
+  "counts-drift": "the region counts disagree with the stated total",
+  "bubble-sizes": "marker area encodes importance, not to scale",
 };

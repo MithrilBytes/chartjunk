@@ -20,6 +20,11 @@ export type Kind =
   | "bump"
   | "radar"
   | "violin"
+  | "pie"
+  | "waterfall"
+  | "area"
+  | "histogram"
+  | "venn"
   | "panels"
   | "caption";
 
@@ -187,7 +192,16 @@ export type ArtifactId =
   | "confusion-diagonal"
   | "pairwise-grid"
   | "extrapolated-region"
-  | "tsne-axes";
+  | "tsne-axes"
+  | "other-largest"
+  | "sum-drift"
+  | "hole-number"
+  | "contributions-exceed"
+  | "other-grows"
+  | "indistinct-colors"
+  | "smoothed-histogram"
+  | "counts-drift"
+  | "bubble-sizes";
 
 export interface Figure {
   seed: string;
