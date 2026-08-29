@@ -14,7 +14,8 @@ import type { Kind, SizeName, StyleName } from "./types.js";
 
 const KINDS = [
   "figure", "line", "scatter", "bar", "heatmap", "pareto", "phase",
-  "roc", "profile", "bump", "radar", "violin", "panels", "caption",
+  "roc", "profile", "bump", "radar", "violin",
+  "pie", "waterfall", "area", "histogram", "venn", "panels", "caption",
 ];
 const FORMATS = ["svg", "tikz", "html", "markdown", "text", "json"];
 const STYLE_NAMES = ["matplotlib", "ggplot", "pgfplots", "excel"];
@@ -28,6 +29,7 @@ Options:
   -s, --seed <seed>       any string or number; same seed, same figure
   -k, --kind <kind>       figure | line | scatter | bar | heatmap | pareto
                           | phase | roc | profile | bump | radar | violin
+                          | pie | waterfall | area | histogram | venn
                           | panels | caption              (default: figure)
   -f, --format <format>   svg | tikz | html | markdown | text | json
                           (default: svg, or inferred from --out extension)

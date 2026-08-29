@@ -24,6 +24,11 @@ import { buildProfile } from "./kinds/profile.js";
 import { buildBump } from "./kinds/bump.js";
 import { buildRadar } from "./kinds/radar.js";
 import { buildViolin } from "./kinds/violin.js";
+import { buildPie } from "./kinds/pie.js";
+import { buildWaterfall } from "./kinds/waterfall.js";
+import { buildArea } from "./kinds/area.js";
+import { buildHistogram } from "./kinds/histogram.js";
+import { buildVenn } from "./kinds/venn.js";
 
 export interface GenerateOptions extends Partial<DialValues> {
   seed?: Seed;
@@ -47,13 +52,14 @@ export function randomSeed(): string {
 
 const SINGLE_KINDS: readonly [PanelKind, number][] = [
   ["line", 3], ["bar", 2.2], ["scatter", 1.6], ["pareto", 1.6],
-  ["radar", 1.6], ["roc", 1.4], ["violin", 1.4], ["profile", 1.2],
-  ["bump", 1.2], ["heatmap", 1.1], ["phase", 1.1],
+  ["radar", 1.6], ["roc", 1.4], ["violin", 1.4], ["histogram", 1.4],
+  ["pie", 1.3], ["profile", 1.2], ["bump", 1.2], ["waterfall", 1.2],
+  ["area", 1.2], ["heatmap", 1.1], ["phase", 1.1], ["venn", 1],
 ];
 const PANEL_BASE_KINDS: readonly [PanelKind, number][] = [
-  ["line", 3], ["bar", 2], ["scatter", 1.5], ["roc", 1],
+  ["line", 3], ["bar", 2], ["scatter", 1.5], ["roc", 1], ["histogram", 1],
 ];
-const MISMATCH_KINDS: readonly PanelKind[] = ["heatmap", "pareto", "phase", "radar"];
+const MISMATCH_KINDS: readonly PanelKind[] = ["heatmap", "pareto", "phase", "radar", "pie", "venn"];
 const PANEL_LETTERS = ["a", "b", "c", "d", "e", "f"];
 
 export function generateFigure(opts: GenerateOptions = {}): Figure {
@@ -197,6 +203,11 @@ function buildPanel(ctx: PanelCtx): Panel {
     case "bump": return buildBump(ctx);
     case "radar": return buildRadar(ctx);
     case "violin": return buildViolin(ctx);
+    case "pie": return buildPie(ctx);
+    case "waterfall": return buildWaterfall(ctx);
+    case "area": return buildArea(ctx);
+    case "histogram": return buildHistogram(ctx);
+    case "venn": return buildVenn(ctx);
   }
 }
 
