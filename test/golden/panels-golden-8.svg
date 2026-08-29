@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 372" width="800" height="372" font-family="'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" role="img">
-<title>Figure 1: Effect of Renormalized budget on ‖x − x*‖₂ for HVE (ours). Shaded region is infeasible under Assumption A. Results averaged over a single run. Error bars denote one standard deviation over 5 runs.</title>
+<title>Figure 1: Effect of Renormalized budget on ‖x − x*‖₂ for HVE (ours). Shaded region is infeasible under Assumption 2.3. Error bars denote one standard deviation over 5 runs. Axes are logarithmic.</title>
 <defs><pattern id="hatch0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch1" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(135)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch2" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch3" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern></defs>
 <rect x="0" y="0" width="800" height="372" fill="#ffffff"/>
 <g transform="translate(0,0)">
@@ -397,6 +397,6 @@
 <text x="12" y="71.5" font-size="10" fill="#262626" text-anchor="middle" transform="rotate(-90 12 71.5)">‖x − x*‖₂</text>
 <text x="12" y="16" font-size="11" font-weight="600">(d)</text>
 </g>
-<text x="14" y="342" font-size="10" text-anchor="start" fill="#262626">Effect of Renormalized budget on ‖x − x*‖₂ for HVE (ours). Shaded region is infeasible under Assumption A. Results averaged over a single run. Error bars</text>
-<text x="14" y="355" font-size="10" text-anchor="start" fill="#262626">denote one standard deviation over 5 runs.</text>
+<text x="14" y="342" font-size="10" text-anchor="start" fill="#262626">Effect of Renormalized budget on ‖x − x*‖₂ for HVE (ours). Shaded region is infeasible under Assumption 2.3. Error bars denote one standard deviation over</text>
+<text x="14" y="355" font-size="10" text-anchor="start" fill="#262626">5 runs. Axes are logarithmic.</text>
 </svg>

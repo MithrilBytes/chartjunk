@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 402" width="480" height="402" font-family="'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" role="img">
-<title>Figure 1: Sensitivity of SWKPC (ours) to Relative error. Shaded region is infeasible under Assumption 2.3. Lower is better.</title>
+<title>Figure 1: Sensitivity of SWKPC (ours) to Relative error. Shaded region is infeasible under Assumption A. Higher is better.</title>
 <defs><pattern id="hatch0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch1" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(135)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch2" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch3" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern></defs>
 <rect x="0" y="0" width="480" height="402" fill="#ffffff"/>
 <g transform="translate(0,0)">
@@ -56,5 +56,5 @@
 <text x="78" y="72" font-size="8.5" text-anchor="start" fill="#262626">Quasi-SOTA [25]</text>
 </g>
 <text x="14" y="372" font-size="10" text-anchor="start" fill="#262626">Sensitivity of SWKPC (ours) to Relative error. Shaded region is infeasible under</text>
-<text x="14" y="385" font-size="10" text-anchor="start" fill="#262626">Assumption 2.3. Lower is better.</text>
+<text x="14" y="385" font-size="10" text-anchor="start" fill="#262626">Assumption A. Higher is better.</text>
 </svg>

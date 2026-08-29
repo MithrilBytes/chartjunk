@@ -113,7 +113,10 @@ describe("structure invariants", () => {
   });
 
   it("exactly one bold ours where the kind has methods", () => {
-    const oursKinds = ["line", "scatter", "bar", "pareto", "roc", "profile", "bump", "radar", "violin"];
+    const oursKinds = [
+      "line", "scatter", "bar", "pareto", "roc", "profile", "bump", "radar",
+      "violin", "histogram", "waterfall",
+    ];
     for (const fig of figs) {
       for (const panel of fig.panels) {
         const ours = panel.series.filter((s) => s.role === "ours");

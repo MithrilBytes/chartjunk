@@ -1,10 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 402" width="480" height="402" font-family="'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" role="img">
-<title>Figure 1: Scaling of t-SNE 2 with t-SNE 1 for AWOM (ours) and baselines. Results averaged over a single run. Cluster separation is evident.</title>
+<title>Figure 1: Scaling of Accuracy with ‖x − x*‖₂ for AWOM (ours) and baselines. Shaded region is infeasible under Assumption B.1. Higher is better.</title>
 <defs><pattern id="hatch0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch1" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(135)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch2" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch3" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern></defs>
 <rect x="0" y="0" width="480" height="402" fill="#ffffff"/>
 <g transform="translate(0,0)">
 <clipPath id="clip0"><rect x="46" y="14" width="422" height="310" /></clipPath>
 <g clip-path="url(#clip0)">
+<polygon points="50.22,324 67.63,324 85.04,324 102.44,323.64 119.85,289.96 137.26,262.01 154.67,238.82 172.07,219.57 189.48,203.6 206.89,190.34 224.3,179.34 241.7,170.22 259.11,162.64 276.52,156.35 293.93,151.14 311.33,146.81 328.74,143.22 346.15,140.23 363.55,137.76 380.96,135.71 398.37,134 415.78,132.59 433.19,131.42 450.59,130.44 468,129.63 468,14 50.22,14" fill="#9e9e9e" opacity="0.18"/>
+<text x="259.11" y="181.83" font-size="9.5" text-anchor="middle" fill="#555555" font-style="italic">beyond this work</text>
 <line x1="46" y1="14" x2="46" y2="324" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
 <line x1="130.4" y1="14" x2="130.4" y2="324" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
 <line x1="214.8" y1="14" x2="214.8" y2="324" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
@@ -12,130 +14,61 @@
 <line x1="383.6" y1="14" x2="383.6" y2="324" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
 <line x1="468" y1="14" x2="468" y2="324" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
 <line x1="46" y1="324" x2="468" y2="324" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
-<line x1="46" y1="220.67" x2="468" y2="220.67" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
-<line x1="46" y1="117.33" x2="468" y2="117.33" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
+<line x1="46" y1="262" x2="468" y2="262" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
+<line x1="46" y1="200" x2="468" y2="200" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
+<line x1="46" y1="138" x2="468" y2="138" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
+<line x1="46" y1="76" x2="468" y2="76" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
 <line x1="46" y1="14" x2="468" y2="14" stroke="#b0b0b0" stroke-width="0.8" opacity="0.9"/>
-<polygon points="467.01,246.58 468.31,250.06 472.02,250.23 469.12,252.54 470.11,256.12 467.01,254.07 463.91,256.12 464.91,252.54 462,250.23 465.71,250.06" fill="#1f77b4"/>
-<polygon points="246.19,236.53 247.49,240.01 251.2,240.17 248.29,242.49 249.28,246.07 246.19,244.02 243.09,246.07 244.08,242.49 241.17,240.17 244.88,240.01" fill="#1f77b4"/>
-<polygon points="126.98,217.5 128.28,220.98 131.99,221.14 129.09,223.46 130.08,227.03 126.98,224.98 123.88,227.03 124.88,223.46 121.97,221.14 125.68,220.98" fill="#1f77b4"/>
-<polygon points="395.1,242.32 396.41,245.8 400.12,245.96 397.21,248.27 398.2,251.85 395.1,249.8 392.01,251.85 393,248.27 390.09,245.96 393.8,245.8" fill="#1f77b4"/>
-<polygon points="142.78,228.44 144.08,231.92 147.79,232.09 144.88,234.4 145.87,237.98 142.78,235.93 139.68,237.98 140.67,234.4 137.76,232.09 141.48,231.92" fill="#1f77b4"/>
-<polygon points="102.01,222.8 103.32,226.28 107.03,226.44 104.12,228.75 105.11,232.33 102.01,230.28 98.92,232.33 99.91,228.75 97,226.44 100.71,226.28" fill="#1f77b4"/>
-<polygon points="189.77,230.65 191.08,234.13 194.79,234.29 191.88,236.61 192.87,240.19 189.77,238.14 186.68,240.19 187.67,236.61 184.76,234.29 188.47,234.13" fill="#1f77b4"/>
-<polygon points="259.23,227.13 260.53,230.61 264.24,230.78 261.34,233.09 262.33,236.67 259.23,234.62 256.13,236.67 257.13,233.09 254.22,230.78 257.93,230.61" fill="#1f77b4"/>
-<polygon points="126.3,216.6 127.6,220.08 131.32,220.24 128.41,222.56 129.4,226.14 126.3,224.09 123.21,226.14 124.2,222.56 121.29,220.24 125,220.08" fill="#1f77b4"/>
-<polygon points="89.46,224.15 90.76,227.63 94.48,227.79 91.57,230.11 92.56,233.69 89.46,231.64 86.37,233.69 87.36,230.11 84.45,227.79 88.16,227.63" fill="#1f77b4"/>
-<polygon points="382.04,247.24 383.34,250.72 387.05,250.88 384.14,253.2 385.14,256.78 382.04,254.73 378.94,256.78 379.93,253.2 377.03,250.88 380.74,250.72" fill="#1f77b4"/>
-<polygon points="166.44,219.23 167.74,222.71 171.45,222.87 168.54,225.19 169.53,228.77 166.44,226.72 163.34,228.77 164.33,225.19 161.43,222.87 165.14,222.71" fill="#1f77b4"/>
-<polygon points="400.74,248.25 402.04,251.73 405.75,251.89 402.84,254.2 403.84,257.78 400.74,255.73 397.64,257.78 398.63,254.2 395.73,251.89 399.44,251.73" fill="#1f77b4"/>
-<polygon points="279.22,227.91 280.52,231.39 284.23,231.55 281.32,233.86 282.32,237.44 279.22,235.39 276.12,237.44 277.11,233.86 274.21,231.55 277.92,231.39" fill="#1f77b4"/>
-<polygon points="118.98,222.44 120.28,225.92 123.99,226.08 121.08,228.4 122.08,231.97 118.98,229.92 115.88,231.97 116.87,228.4 113.97,226.08 117.68,225.92" fill="#1f77b4"/>
-<polygon points="362.08,238.49 363.38,241.97 367.09,242.13 364.19,244.45 365.18,248.03 362.08,245.98 358.98,248.03 359.98,244.45 357.07,242.13 360.78,241.97" fill="#1f77b4"/>
-<polygon points="173.05,221.01 174.35,224.49 178.06,224.65 175.16,226.96 176.15,230.54 173.05,228.49 169.95,230.54 170.95,226.96 168.04,224.65 171.75,224.49" fill="#1f77b4"/>
-<polygon points="88.72,226.46 90.02,229.94 93.73,230.11 90.82,232.42 91.82,236 88.72,233.95 85.62,236 86.61,232.42 83.71,230.11 87.42,229.94" fill="#1f77b4"/>
-<polygon points="399.46,241.76 400.76,245.24 404.47,245.41 401.56,247.72 402.55,251.3 399.46,249.25 396.36,251.3 397.35,247.72 394.44,245.41 398.15,245.24" fill="#1f77b4"/>
-<polygon points="386.79,245.3 388.09,248.78 391.8,248.94 388.89,251.26 389.89,254.83 386.79,252.78 383.69,254.83 384.68,251.26 381.78,248.94 385.49,248.78" fill="#1f77b4"/>
-<polygon points="166.29,231.18 167.6,234.66 171.31,234.82 168.4,237.14 169.39,240.71 166.29,238.66 163.2,240.71 164.19,237.14 161.28,234.82 164.99,234.66" fill="#1f77b4"/>
-<polygon points="295.5,242.04 296.81,245.52 300.52,245.68 297.61,247.99 298.6,251.57 295.5,249.52 292.41,251.57 293.4,247.99 290.49,245.68 294.2,245.52" fill="#1f77b4"/>
-<polygon points="445.51,249.59 446.82,253.07 450.53,253.24 447.62,255.55 448.61,259.13 445.51,257.08 442.42,259.13 443.41,255.55 440.5,253.24 444.21,253.07" fill="#1f77b4"/>
-<polygon points="238.51,231.74 239.82,235.22 243.53,235.38 240.62,237.7 241.61,241.27 238.51,239.22 235.42,241.27 236.41,237.7 233.5,235.38 237.21,235.22" fill="#1f77b4"/>
-<polygon points="394.74,241.57 396.05,245.05 399.76,245.21 396.85,247.53 397.84,251.11 394.74,249.05 391.65,251.11 392.64,247.53 389.73,245.21 393.44,245.05" fill="#1f77b4"/>
-<polygon points="110.93,220.72 112.23,224.2 115.94,224.36 113.03,226.68 114.03,230.26 110.93,228.21 107.83,230.26 108.82,226.68 105.92,224.36 109.63,224.2" fill="#1f77b4"/>
-<rect x="346.45" y="231.29" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="177.04" y="220.18" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="113.45" y="213.03" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="135.59" y="220.11" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="305.16" y="238.08" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="308.5" y="234.53" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="54.72" y="212.05" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="206.73" y="232.68" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="306.39" y="239.7" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="161.1" y="228.59" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="83.95" y="220.62" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="425.63" y="245.02" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="373.3" y="242.12" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="299.33" y="229.36" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="45.64" y="214.15" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="45.68" y="207.04" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="100.19" y="224.3" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="213.29" y="220.23" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="60.01" y="221.03" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="424.34" y="242.98" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="349.09" y="231.01" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="425.2" y="241.68" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="112.11" y="212.88" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="51.49" y="211.78" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="286.37" y="229.14" width="6.2" height="6.2" fill="#ff7f0e"/>
-<rect x="137.89" y="216.22" width="6.2" height="6.2" fill="#ff7f0e"/>
-<polygon points="321.89,220.61 318.48,227.43 325.3,227.43" fill="#2ca02c"/>
-<polygon points="174.22,236.35 170.81,243.17 177.63,243.17" fill="#2ca02c"/>
-<polygon points="98.89,229.15 95.48,235.97 102.3,235.97" fill="#2ca02c"/>
-<polygon points="128.79,237.63 125.38,244.45 132.2,244.45" fill="#2ca02c"/>
-<polygon points="230.15,220.38 226.74,227.2 233.56,227.2" fill="#2ca02c"/>
-<polygon points="298.32,231.18 294.91,238 301.73,238" fill="#2ca02c"/>
-<polygon points="341.64,228.48 338.23,235.3 345.05,235.3" fill="#2ca02c"/>
-<polygon points="151.25,223.64 147.84,230.46 154.66,230.46" fill="#2ca02c"/>
-<polygon points="365.52,217.72 362.11,224.54 368.93,224.54" fill="#2ca02c"/>
-<polygon points="252.35,225.81 248.94,232.63 255.76,232.63" fill="#2ca02c"/>
-<polygon points="51.16,239.23 47.75,246.05 54.57,246.05" fill="#2ca02c"/>
-<polygon points="248,223.48 244.59,230.3 251.41,230.3" fill="#2ca02c"/>
-<polygon points="257.96,225.24 254.55,232.06 261.37,232.06" fill="#2ca02c"/>
-<polygon points="328.85,220.06 325.44,226.88 332.26,226.88" fill="#2ca02c"/>
-<polygon points="277.7,218.37 274.29,225.19 281.11,225.19" fill="#2ca02c"/>
-<polygon points="114.9,237.55 111.49,244.37 118.31,244.37" fill="#2ca02c"/>
-<polygon points="157.1,223.48 153.69,230.3 160.51,230.3" fill="#2ca02c"/>
-<polygon points="112.31,235 108.9,241.82 115.72,241.82" fill="#2ca02c"/>
-<polygon points="89.52,229.02 86.11,235.84 92.93,235.84" fill="#2ca02c"/>
-<polygon points="207.76,229.34 204.35,236.16 211.17,236.16" fill="#2ca02c"/>
-<polygon points="378.17,219.17 374.76,225.99 381.58,225.99" fill="#2ca02c"/>
-<polygon points="449.21,219.75 445.8,226.57 452.62,226.57" fill="#2ca02c"/>
-<polygon points="57.22,228.62 53.81,235.44 60.63,235.44" fill="#2ca02c"/>
-<polygon points="267.59,218.75 264.18,225.57 271,225.57" fill="#2ca02c"/>
-<polygon points="136.87,228.28 133.46,235.1 140.28,235.1" fill="#2ca02c"/>
-<polygon points="307.24,227.22 303.83,234.04 310.65,234.04" fill="#2ca02c"/>
-<polyline points="88.72,225.34 467.01,254.36" fill="none" stroke="#1f77b4" stroke-width="1.05" stroke-dasharray="6,3.5999999999999996" stroke-linejoin="round"/>
-<text x="408.92" y="35.7" font-size="9" text-anchor="middle" fill="#262626">R² = 0.649</text>
-<rect x="132.98" y="206.77" width="44.8" height="13" fill="#ffffff" stroke="#262626" stroke-width="0.7" opacity="0.92"/>
-<text x="136.98" y="216.27" font-size="8.5" text-anchor="start" fill="#262626">see text</text>
-<line x1="126.98" y1="222.77" x2="132.98" y2="215.77" stroke="#262626" stroke-width="0.6"/>
+<polygon points="335.89,136.65 337.19,140.13 340.9,140.3 337.99,142.61 338.99,146.19 335.89,144.14 332.79,146.19 333.78,142.61 330.88,140.3 334.59,140.13" fill="#1f77b4"/>
+<rect x="294.09" y="234.11" width="6.2" height="6.2" fill="#ff7f0e"/>
+<polygon points="347.49,169.04 344.08,175.86 350.9,175.86" fill="#2ca02c"/>
+<line x1="46" y1="93.08" x2="468" y2="93.08" stroke="#262626" stroke-width="1" stroke-dasharray="4,2.4"/>
+<text x="464" y="89.08" font-size="8.5" text-anchor="end" fill="#262626" font-style="italic">theoretical limit</text>
+<rect x="353.49" y="156.76" width="44.8" height="13" fill="#ffffff" stroke="#262626" stroke-width="0.7" opacity="0.92"/>
+<text x="357.49" y="166.26" font-size="8.5" text-anchor="start" fill="#262626">see text</text>
+<line x1="347.49" y1="172.76" x2="353.49" y2="165.76" stroke="#262626" stroke-width="0.6"/>
 </g>
 <rect x="46" y="14" width="422" height="310" fill="none" stroke="#262626" stroke-width="0.9"/>
 <line x1="46" y1="324" x2="46" y2="328" stroke="#262626" stroke-width="0.9"/>
 <text x="46" y="338" font-size="8.5" text-anchor="middle" fill="#262626">0</text>
 <line x1="130.4" y1="324" x2="130.4" y2="328" stroke="#262626" stroke-width="0.9"/>
-<text x="130.4" y="338" font-size="8.5" text-anchor="middle" fill="#262626">0.2</text>
+<text x="130.4" y="338" font-size="8.5" text-anchor="middle" fill="#262626">10</text>
 <line x1="214.8" y1="324" x2="214.8" y2="328" stroke="#262626" stroke-width="0.9"/>
-<text x="214.8" y="338" font-size="8.5" text-anchor="middle" fill="#262626">0.4</text>
+<text x="214.8" y="338" font-size="8.5" text-anchor="middle" fill="#262626">20</text>
 <line x1="299.2" y1="324" x2="299.2" y2="328" stroke="#262626" stroke-width="0.9"/>
-<text x="299.2" y="338" font-size="8.5" text-anchor="middle" fill="#262626">0.6</text>
+<text x="299.2" y="338" font-size="8.5" text-anchor="middle" fill="#262626">30</text>
 <line x1="383.6" y1="324" x2="383.6" y2="328" stroke="#262626" stroke-width="0.9"/>
-<text x="383.6" y="338" font-size="8.5" text-anchor="middle" fill="#262626">0.8</text>
+<text x="383.6" y="338" font-size="8.5" text-anchor="middle" fill="#262626">40</text>
 <line x1="468" y1="324" x2="468" y2="328" stroke="#262626" stroke-width="0.9"/>
-<text x="468" y="338" font-size="8.5" text-anchor="middle" fill="#262626">1</text>
+<text x="468" y="338" font-size="8.5" text-anchor="middle" fill="#262626">50</text>
 <line x1="46" y1="324" x2="42" y2="324" stroke="#262626" stroke-width="0.9"/>
-<text x="39" y="327" font-size="8.5" text-anchor="end" fill="#262626">0</text>
-<line x1="46" y1="220.67" x2="42" y2="220.67" stroke="#262626" stroke-width="0.9"/>
-<text x="39" y="223.67" font-size="8.5" text-anchor="end" fill="#262626">1</text>
-<line x1="46" y1="117.33" x2="42" y2="117.33" stroke="#262626" stroke-width="0.9"/>
-<text x="39" y="120.33" font-size="8.5" text-anchor="end" fill="#262626">2</text>
+<text x="39" y="327" font-size="8.5" text-anchor="end" fill="#262626">0.6</text>
+<line x1="46" y1="262" x2="42" y2="262" stroke="#262626" stroke-width="0.9"/>
+<text x="39" y="265" font-size="8.5" text-anchor="end" fill="#262626">0.7</text>
+<line x1="46" y1="200" x2="42" y2="200" stroke="#262626" stroke-width="0.9"/>
+<text x="39" y="203" font-size="8.5" text-anchor="end" fill="#262626">0.8</text>
+<line x1="46" y1="138" x2="42" y2="138" stroke="#262626" stroke-width="0.9"/>
+<text x="39" y="141" font-size="8.5" text-anchor="end" fill="#262626">0.9</text>
+<line x1="46" y1="76" x2="42" y2="76" stroke="#262626" stroke-width="0.9"/>
+<text x="39" y="79" font-size="8.5" text-anchor="end" fill="#262626">1</text>
 <line x1="46" y1="14" x2="42" y2="14" stroke="#262626" stroke-width="0.9"/>
-<text x="39" y="17" font-size="8.5" text-anchor="end" fill="#262626">3</text>
-<text x="257" y="352" font-size="10" text-anchor="middle" fill="#262626">t-SNE 1</text>
-<text x="12" y="169" font-size="10" fill="#262626" text-anchor="middle" transform="rotate(-90 12 169)">t-SNE 2</text>
-<rect x="317.6" y="20" width="144.4" height="60" fill="#ffffff" opacity="0.9" stroke="#8c8c8c" stroke-width="0.7"/>
-<line x1="322.6" y1="30" x2="338.6" y2="30" stroke="#1f77b4" stroke-width="1.6"/>
-<polygon points="330.6,25.41 331.73,28.44 334.97,28.58 332.43,30.6 333.3,33.71 330.6,31.93 327.9,33.71 328.77,30.6 326.23,28.58 329.47,28.44" fill="#1f77b4"/>
-<text x="343.6" y="33" font-size="8.5" text-anchor="start" fill="#262626" font-weight="600">AWOM (ours)</text>
-<line x1="322.6" y1="43" x2="338.6" y2="43" stroke="#d62728" stroke-width="1.6"/>
-<polygon points="330.6,39.49 333.57,43 330.6,46.51 327.63,43" fill="#d62728"/>
-<text x="343.6" y="46" font-size="8.5" text-anchor="start" fill="#262626">Ours (v2)</text>
-<line x1="322.6" y1="56" x2="338.6" y2="56" stroke="#ff7f0e" stroke-width="1.6"/>
-<rect x="327.9" y="53.3" width="5.4" height="5.4" fill="#ff7f0e"/>
-<text x="343.6" y="59" font-size="8.5" text-anchor="start" fill="#262626">Quasi-SOTA [2]</text>
-<line x1="322.6" y1="69" x2="338.6" y2="69" stroke="#2ca02c" stroke-width="1.6"/>
-<polygon points="330.6,65.76 327.63,71.7 333.57,71.7" fill="#2ca02c"/>
-<text x="343.6" y="72" font-size="8.5" text-anchor="start" fill="#262626">Snaggle and Quabosh [2]</text>
+<text x="39" y="17" font-size="8.5" text-anchor="end" fill="#262626">1.1</text>
+<text x="257" y="352" font-size="10" text-anchor="middle" fill="#262626">‖x − x*‖₂ (dimensionless, allegedly)</text>
+<text x="12" y="169" font-size="10" fill="#262626" text-anchor="middle" transform="rotate(-90 12 169)">Accuracy</text>
+<rect x="52" y="20" width="144.4" height="60" fill="#ffffff" opacity="0.9" stroke="#8c8c8c" stroke-width="0.7"/>
+<line x1="57" y1="30" x2="73" y2="30" stroke="#1f77b4" stroke-width="1.6"/>
+<polygon points="65,25.41 66.13,28.44 69.37,28.58 66.83,30.6 67.7,33.71 65,31.93 62.3,33.71 63.17,30.6 60.63,28.58 63.87,28.44" fill="#1f77b4"/>
+<text x="78" y="33" font-size="8.5" text-anchor="start" fill="#262626" font-weight="600">AWOM (ours)</text>
+<line x1="57" y1="43" x2="73" y2="43" stroke="#d62728" stroke-width="1.6"/>
+<polygon points="65,39.49 67.97,43 65,46.51 62.03,43" fill="#d62728"/>
+<text x="78" y="46" font-size="8.5" text-anchor="start" fill="#262626">Ours (v2)</text>
+<line x1="57" y1="56" x2="73" y2="56" stroke="#ff7f0e" stroke-width="1.6"/>
+<rect x="62.3" y="53.3" width="5.4" height="5.4" fill="#ff7f0e"/>
+<text x="78" y="59" font-size="8.5" text-anchor="start" fill="#262626">Quasi-SOTA [2]</text>
+<line x1="57" y1="69" x2="73" y2="69" stroke="#2ca02c" stroke-width="1.6"/>
+<polygon points="65,65.76 62.03,71.7 67.97,71.7" fill="#2ca02c"/>
+<text x="78" y="72" font-size="8.5" text-anchor="start" fill="#262626">Snaggle and Quabosh [2]</text>
 </g>
-<text x="14" y="372" font-size="10" text-anchor="start" fill="#262626">Scaling of t-SNE 2 with t-SNE 1 for AWOM (ours) and baselines. Results averaged over a</text>
-<text x="14" y="385" font-size="10" text-anchor="start" fill="#262626">single run. Cluster separation is evident.</text>
+<text x="14" y="372" font-size="10" text-anchor="start" fill="#262626">Scaling of Accuracy with ‖x − x*‖₂ for AWOM (ours) and baselines. Shaded region is</text>
+<text x="14" y="385" font-size="10" text-anchor="start" fill="#262626">infeasible under Assumption B.1. Higher is better.</text>
 </svg>

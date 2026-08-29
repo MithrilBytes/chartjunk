@@ -74,5 +74,6 @@ export const DIAL_CORNERS = [
 
 export const PLOT_KINDS = [
   "line", "scatter", "bar", "heatmap", "pareto", "phase",
-  "roc", "profile", "bump", "radar", "violin", "panels",
+  "roc", "profile", "bump", "radar", "violin",
+  "pie", "waterfall", "area", "histogram", "venn", "panels",
 ] as const;

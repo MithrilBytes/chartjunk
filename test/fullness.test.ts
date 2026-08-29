@@ -16,6 +16,11 @@ const ALWAYS_ON: Record<string, ArtifactId[]> = {
   bump: ["orphan-legend", "ours-bold", "rank-inverted"],
   radar: ["orphan-legend", "ours-bold", "normalized-to-ours"],
   violin: ["ours-bold", "kde-from-nothing", "significance-stars"],
+  pie: ["orphan-legend", "other-largest", "sum-drift", "hole-number"],
+  waterfall: ["ours-bold", "contributions-exceed", "significance-stars"],
+  area: ["orphan-legend", "other-grows", "indistinct-colors"],
+  histogram: ["orphan-legend", "ours-bold", "smoothed-histogram"],
+  venn: ["orphan-legend", "counts-drift"],
   panels: [
     "orphan-legend", "ours-bold", "error-bars", "significance-stars", "r-squared",
     "auc-in-legend", "random-diagonal",

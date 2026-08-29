@@ -13,4 +13,9 @@ export const GOLDEN_CASES = [
   { kind: "bump", seed: "golden-11" },
   { kind: "radar", seed: "golden-12" },
   { kind: "violin", seed: "golden-13" },
+  { kind: "pie", seed: "golden-14" },
+  { kind: "waterfall", seed: "golden-15" },
+  { kind: "area", seed: "golden-16" },
+  { kind: "histogram", seed: "golden-17" },
+  { kind: "venn", seed: "golden-18" },
 ];

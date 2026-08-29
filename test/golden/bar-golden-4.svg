@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 402" width="480" height="402" font-family="'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" role="img">
-<title>Figure 1: Sensitivity of QLQEST (ours) to Benchmark. ★ denotes results reported in [10]. Lower is better. Best viewed in color.</title>
+<title>Figure 1: Sensitivity of QLQEST (ours) to Benchmark. Lower is better. Error bars denote one standard deviation over 5 runs. Best viewed in color.</title>
 <defs><pattern id="hatch0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch1" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(135)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch2" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch3" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern></defs>
 <rect x="0" y="0" width="480" height="402" fill="#ffffff"/>
 <g transform="translate(0,0)">
@@ -72,6 +72,6 @@
 <rect x="371.6" y="64.5" width="12" height="8" fill="#ff7f0e" stroke="#262626" stroke-width="0.5"/>
 <text x="391.6" y="72" font-size="8.5" text-anchor="start" fill="#262626">Ours (naive)</text>
 </g>
-<text x="14" y="372" font-size="10" text-anchor="start" fill="#262626">Sensitivity of QLQEST (ours) to Benchmark. ★ denotes results reported in [10]. Lower is</text>
-<text x="14" y="385" font-size="10" text-anchor="start" fill="#262626">better. Best viewed in color.</text>
+<text x="14" y="372" font-size="10" text-anchor="start" fill="#262626">Sensitivity of QLQEST (ours) to Benchmark. Lower is better. Error bars denote one standard</text>
+<text x="14" y="385" font-size="10" text-anchor="start" fill="#262626">deviation over 5 runs. Best viewed in color.</text>
 </svg>

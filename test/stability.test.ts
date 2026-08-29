@@ -11,6 +11,7 @@ const SEEDS = ["stable-a", "stable-b", 3];
 const KINDS = [
   "line", "scatter", "bar", "heatmap", "pareto", "phase",
   "roc", "profile", "bump", "radar", "violin",
+  "pie", "waterfall", "area", "histogram", "venn",
 ] as const;
 const STOPS = Array.from({ length: 11 }, (_, i) => i / 10);
 

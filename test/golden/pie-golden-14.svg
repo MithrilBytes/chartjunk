@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 402" width="480" height="402" font-family="'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" role="img">
+<title>Figure 1: Comparison of SEPCTRL (ours) against five baselines on the Quabosh sampler. Percentages may not sum to 100 due to rounding. Best viewed in color.</title>
+<defs><pattern id="hatch0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch1" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(135)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch2" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch3" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern></defs>
+<rect x="0" y="0" width="480" height="402" fill="#ffffff"/>
+<g transform="translate(0,0)">
+<circle cx="184.6" cy="170" r="78" fill="none" stroke="#b0b0b0" stroke-width="0.6" opacity="0.7"/>
+<circle cx="184.6" cy="170" r="150" fill="none" stroke="#b0b0b0" stroke-width="0.6" opacity="0.7"/>
+<path d="M 184.6 170 L 184.6 26 A 144 144 0 0 1 317.49 114.54 Z" fill="#1f77b4" stroke="#ffffff" stroke-width="1"/>
+<text x="234.1" y="98.7" font-size="8.5" text-anchor="middle" fill="#ffffff" font-weight="600">19.1%</text>
+<path d="M 184.6 170 L 317.49 114.54 A 144 144 0 0 1 306.25 247.05 Z" fill="#ff7f0e" stroke="#ffffff" stroke-width="1"/>
+<text x="273.56" y="180.55" font-size="8.5" text-anchor="middle" fill="#ffffff" font-weight="600">15.6%</text>
+<path d="M 184.6 170 L 306.25 247.05 A 144 144 0 0 1 149.94 309.77 Z" fill="#2ca02c" stroke="#ffffff" stroke-width="1"/>
+<text x="217.84" y="255.86" font-size="8.5" text-anchor="middle" fill="#ffffff" font-weight="600">20.3%</text>
+<path d="M 184.6 170 L 149.94 309.77 A 144 144 0 0 1 42.14 190.97 Z" fill="#d62728" stroke="#ffffff" stroke-width="1"/>
+<text x="118.49" y="233" font-size="8.5" text-anchor="middle" fill="#ffffff" font-weight="600">19.2%</text>
+<path d="M 179.3 165.42 L 36.84 186.4 A 144 144 0 0 1 179.3 21.42 Z" fill="#9467bd" stroke="#ffffff" stroke-width="1"/>
+<text x="111.73" y="110.07" font-size="8.5" text-anchor="middle" fill="#ffffff" font-weight="600">27.9%</text>
+<rect x="363.2" y="10" width="110.8" height="86" fill="#ffffff" opacity="0.9" stroke="#8c8c8c" stroke-width="0.7"/>
+<rect x="369.2" y="15" width="10" height="8" fill="#d62728" stroke="#262626" stroke-width="0.4"/>
+<text x="384.2" y="22" font-size="8.5" text-anchor="start" fill="#262626">ambiguous</text>
+<rect x="369.2" y="28" width="10" height="8" fill="#ff7f0e" stroke="#262626" stroke-width="0.4"/>
+<text x="384.2" y="35" font-size="8.5" text-anchor="start" fill="#262626">annotation drift</text>
+<rect x="369.2" y="41" width="10" height="8" fill="#8c564b" stroke="#262626" stroke-width="0.4"/>
+<text x="384.2" y="48" font-size="8.5" text-anchor="start" fill="#262626">Ours (v2)</text>
+<rect x="369.2" y="54" width="10" height="8" fill="#1f77b4" stroke="#262626" stroke-width="0.4"/>
+<text x="384.2" y="61" font-size="8.5" text-anchor="start" fill="#262626">out of memory</text>
+<rect x="369.2" y="67" width="10" height="8" fill="#2ca02c" stroke="#262626" stroke-width="0.4"/>
+<text x="384.2" y="74" font-size="8.5" text-anchor="start" fill="#262626">label noise</text>
+<rect x="369.2" y="80" width="10" height="8" fill="#9467bd" stroke="#262626" stroke-width="0.4"/>
+<text x="384.2" y="87" font-size="8.5" text-anchor="start" fill="#262626">Other</text>
+</g>
+<text x="14" y="372" font-size="10" text-anchor="start" fill="#262626">Comparison of SEPCTRL (ours) against five baselines on the Quabosh sampler. Percentages</text>
+<text x="14" y="385" font-size="10" text-anchor="start" fill="#262626">may not sum to 100 due to rounding. Best viewed in color.</text>
+</svg>

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 402" width="480" height="402" font-family="'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" role="img">
+<title>Figure 1: Comparison of PCS (ours) against prior work on the Wumpin regime. ★ denotes results reported in [11]. Lower is better.</title>
+<defs><pattern id="hatch0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch1" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(135)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch2" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch3" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern></defs>
+<rect x="0" y="0" width="480" height="402" fill="#ffffff"/>
+<g transform="translate(0,0)">
+<clipPath id="clip0"><rect x="46" y="14" width="422" height="310" /></clipPath>
+<g clip-path="url(#clip0)">
+<rect x="57.45" y="123.79" width="37.38" height="200.21" fill="#1f77b4" stroke="#262626" stroke-width="0.6"/>
+<text x="76.14" y="119.79" font-size="8" text-anchor="middle" fill="#262626">0.52</text>
+<rect x="117.74" y="111.95" width="37.38" height="11.84" fill="#2ca02c" stroke="#262626" stroke-width="0.6"/>
+<line x1="94.83" y1="123.79" x2="117.74" y2="123.79" stroke="#8c8c8c" stroke-width="0.7" stroke-dasharray="3,2"/>
+<text x="136.43" y="107.95" font-size="8" text-anchor="middle" fill="#262626">+0.03</text>
+<rect x="178.03" y="111.95" width="37.38" height="4.02" fill="#d62728" stroke="#262626" stroke-width="0.6"/>
+<line x1="155.12" y1="111.95" x2="178.03" y2="111.95" stroke="#8c8c8c" stroke-width="0.7" stroke-dasharray="3,2"/>
+<text x="196.71" y="107.95" font-size="8" text-anchor="middle" fill="#262626">−0.01</text>
+<rect x="238.31" y="104.32" width="37.38" height="11.65" fill="#2ca02c" stroke="#262626" stroke-width="0.6"/>
+<line x1="215.4" y1="115.97" x2="238.31" y2="115.97" stroke="#8c8c8c" stroke-width="0.7" stroke-dasharray="3,2"/>
+<text x="257" y="100.32" font-size="8" text-anchor="middle" fill="#262626">+0.03</text>
+<rect x="298.6" y="90.23" width="37.38" height="14.09" fill="#2ca02c" stroke="#262626" stroke-width="0.6"/>
+<line x1="275.69" y1="104.32" x2="298.6" y2="104.32" stroke="#8c8c8c" stroke-width="0.7" stroke-dasharray="3,2"/>
+<text x="317.29" y="86.23" font-size="8" text-anchor="middle" fill="#262626">+0.04</text>
+<rect x="358.88" y="70.91" width="37.38" height="19.32" fill="#2ca02c" stroke="#262626" stroke-width="0.6"/>
+<line x1="335.97" y1="90.23" x2="358.88" y2="90.23" stroke="#8c8c8c" stroke-width="0.7" stroke-dasharray="3,2"/>
+<text x="377.57" y="66.91" font-size="8" text-anchor="middle" fill="#262626">+0.05</text>
+<rect x="419.17" y="84.6" width="37.38" height="239.4" fill="#1f77b4" stroke="#262626" stroke-width="0.6"/>
+<line x1="396.26" y1="70.91" x2="419.17" y2="70.91" stroke="#8c8c8c" stroke-width="0.7" stroke-dasharray="3,2"/>
+<text x="437.86" y="80.6" font-size="8" text-anchor="middle" fill="#262626" font-weight="600">0.62</text>
+<text x="377.57" y="50.66" font-size="9.5" text-anchor="middle" fill="#262626">★★</text>
+<rect x="421.2" y="68.6" width="44.8" height="13" fill="#ffffff" stroke="#262626" stroke-width="0.7" opacity="0.92"/>
+<text x="425.2" y="78.1" font-size="8.5" text-anchor="start" fill="#262626">see text</text>
+<line x1="437.86" y1="84.6" x2="421.2" y2="77.6" stroke="#262626" stroke-width="0.6"/>
+</g>
+<rect x="46" y="14" width="422" height="310" fill="none" stroke="#262626" stroke-width="0.9"/>
+<line x1="76.14" y1="324" x2="76.14" y2="328" stroke="#262626" stroke-width="0.9"/>
+<text x="76.14" y="338" font-size="8.5" text-anchor="middle" fill="#262626">Baseline</text>
+<line x1="136.43" y1="324" x2="136.43" y2="328" stroke="#262626" stroke-width="0.9"/>
+<text x="136.43" y="338" font-size="8.5" text-anchor="middle" fill="#262626">+ pretraining</text>
+<line x1="196.71" y1="324" x2="196.71" y2="328" stroke="#262626" stroke-width="0.9"/>
+<text x="196.71" y="338" font-size="8.5" text-anchor="middle" fill="#262626">− the regression fix</text>
+<line x1="257" y1="324" x2="257" y2="328" stroke="#262626" stroke-width="0.9"/>
+<text x="257" y="338" font-size="8.5" text-anchor="middle" fill="#262626">+ warm restarts</text>
+<line x1="317.29" y1="324" x2="317.29" y2="328" stroke="#262626" stroke-width="0.9"/>
+<text x="317.29" y="338" font-size="8.5" text-anchor="middle" fill="#262626">+ longer training</text>
+<line x1="377.57" y1="324" x2="377.57" y2="328" stroke="#262626" stroke-width="0.9"/>
+<text x="377.57" y="338" font-size="8.5" text-anchor="middle" fill="#262626">+ ensembling</text>
+<line x1="437.86" y1="324" x2="437.86" y2="328" stroke="#262626" stroke-width="0.9"/>
+<text x="437.86" y="338" font-size="8.5" text-anchor="middle" fill="#262626">PCS (ours)</text>
+<line x1="46" y1="324" x2="42" y2="324" stroke="#262626" stroke-width="0.9"/>
+<text x="39" y="327" font-size="8.5" text-anchor="end" fill="#262626">0</text>
+<line x1="46" y1="246.5" x2="42" y2="246.5" stroke="#262626" stroke-width="0.9"/>
+<text x="39" y="249.5" font-size="8.5" text-anchor="end" fill="#262626">0.2</text>
+<line x1="46" y1="169" x2="42" y2="169" stroke="#262626" stroke-width="0.9"/>
+<text x="39" y="172" font-size="8.5" text-anchor="end" fill="#262626">0.4</text>
+<line x1="46" y1="91.5" x2="42" y2="91.5" stroke="#262626" stroke-width="0.9"/>
+<text x="39" y="94.5" font-size="8.5" text-anchor="end" fill="#262626">0.6</text>
+<line x1="46" y1="14" x2="42" y2="14" stroke="#262626" stroke-width="0.9"/>
+<text x="39" y="17" font-size="8.5" text-anchor="end" fill="#262626">0.8</text>
+<text x="257" y="352" font-size="10" text-anchor="middle" fill="#262626">Component</text>
+<text x="12" y="169" font-size="10" fill="#262626" text-anchor="middle" transform="rotate(-90 12 169)">Score</text>
+</g>
+<text x="14" y="372" font-size="10" text-anchor="start" fill="#262626">Comparison of PCS (ours) against prior work on the Wumpin regime. ★ denotes results</text>
+<text x="14" y="385" font-size="10" text-anchor="start" fill="#262626">reported in [11]. Lower is better.</text>
+</svg>
