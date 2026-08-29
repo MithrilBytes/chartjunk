@@ -43,11 +43,20 @@ function renderPanelText(fig: Figure, panel: Panel, withLegend: boolean): string
     const t = logY
       ? (Math.log10(Math.max(v, 1e-12)) - Math.log10(y0)) / (Math.log10(y1) - Math.log10(y0))
       : (v - y0) / (y1 - y0);
-    return Math.max(0, Math.min(PLOT_H - 1, PLOT_H - 1 - Math.round(t * (PLOT_H - 1))));
+    const row = Math.round(t * (PLOT_H - 1));
+    // Bump charts want rank 1 on top; everyone else wants low values low.
+    const flipped = panel.kind === "bump" ? row : PLOT_H - 1 - row;
+    return Math.max(0, Math.min(PLOT_H - 1, flipped));
   };
 
   if (panel.kind === "heatmap" && panel.matrix) {
     return renderHeatmapText(fig, panel);
+  }
+  if (panel.kind === "radar") {
+    return renderRadarText(panel);
+  }
+  if (panel.kind === "violin") {
+    return renderViolinText(panel);
   }
 
   // Regions shade sparsely so series stay legible.
@@ -200,6 +209,63 @@ function renderHeatmapText(fig: Figure, panel: Panel): string[] {
   lines.push("");
   lines.push(...wrap(`${SHADES[0]} low  ${SHADES[3]} high: ${cb.label}${unit}`));
   return lines;
+}
+
+/** Radar in 72 columns: one line per spoke, ours against the best rival. */
+function renderRadarText(panel: Panel): string[] {
+  const lines: string[] = [];
+  const ours = panel.series.find((s) => s.role === "ours");
+  const rivals = panel.series.filter((s) => s.role !== "ours");
+  lines.push("Capability".padEnd(20) + "ours".padEnd(16) + "best of the rest");
+  const spokes = panel.x.tickLabels ?? [];
+  for (let s = 0; s < spokes.length; s++) {
+    const ov = ours?.points[s]?.y ?? 0;
+    const bv = Math.max(...rivals.map((r) => r.points[s]?.y ?? 0), 0);
+    const bar = (v: number): string => "█".repeat(Math.max(1, Math.round(v * 9)));
+    lines.push(
+      spokes[s].slice(0, 19).padEnd(20) +
+      `${bar(ov)} ${ov.toFixed(2)}`.padEnd(16) +
+      `${bar(bv)} ${bv.toFixed(2)}`,
+    );
+  }
+  lines.push("");
+  lines.push(...wrap("(normalized to ours = 1.0)"));
+  if (panel.legend.entries.length > 0) {
+    lines.push(...wrap(panel.legend.entries
+      .map((e) => {
+        const s = panel.series.find((x) => x.id === e.seriesId);
+        return `${s ? markFor(panel, s) : MARKERS[e.color % MARKERS.length]} ${e.label}`;
+      })
+      .join("   ")));
+  }
+  return lines.map((l) => l.slice(0, WIDTH));
+}
+
+/** Violins in 72 columns: an ascii box plot per method on a shared scale. */
+function renderViolinText(panel: Panel): string[] {
+  const lines: string[] = [];
+  const [y0, y1] = panel.y.range;
+  const span = Math.max(y1 - y0, 1e-9);
+  const scaleW = 44;
+  const col = (v: number): number =>
+    Math.max(0, Math.min(scaleW - 1, Math.round(((v - y0) / span) * (scaleW - 1))));
+  lines.push(" ".repeat(22) + axisTitle(panel.y).slice(0, scaleW + 6));
+  panel.series.forEach((s, i) => {
+    const row = Array(scaleW).fill(" ");
+    const lo = Math.min(...s.points.map((p) => p.y));
+    const hi = Math.max(...s.points.map((p) => p.y));
+    for (let c = col(lo); c <= col(hi); c++) row[c] = "─";
+    row[col(lo)] = "├";
+    row[col(hi)] = "┤";
+    if (s.stats) {
+      for (let c = col(s.stats.q1); c <= col(s.stats.q3); c++) row[c] = "▓";
+      row[col(s.stats.median)] = "█";
+    }
+    const label = (panel.x.tickLabels?.[i] ?? s.label).slice(0, 20);
+    lines.push(label.padEnd(21) + row.join(""));
+  });
+  lines.push(" ".repeat(21) + `${fmtTick(y0, false)}`.padEnd(scaleW - 6) + `${fmtTick(y1, false)}`);
+  return lines.map((l) => l.slice(0, WIDTH));
 }
 
 function shadeRegion(grid: string[][], poly: { c: number; r: number }[]): void {

@@ -121,7 +121,9 @@ interface Frame {
 }
 
 function renderPanel(fig: Figure, panel: Panel, spec: StyleSpec, W: number, H: number, index: number): string {
-  const rotated = fig.artifacts.includes("rotated-ticks") && (panel.kind === "bar" || panel.kind === "heatmap");
+  if (panel.kind === "radar") return renderRadarPanel(fig, panel, spec, W, H);
+  const rotated = fig.artifacts.includes("rotated-ticks")
+    && (panel.kind === "bar" || panel.kind === "heatmap" || panel.kind === "violin");
   const legendOutside = panel.legend.entries.length > 0 && panel.legend.position === "outside";
   const legendW = legendOutside ? legendWidth(panel.legend) : 0;
   const colorbarW = panel.kind === "heatmap" ? 46 : 0;
@@ -174,6 +176,10 @@ function yMapping(panel: Panel, top: number, bottom: number): {
 } {
   const axis = panel.y;
   const [r0, r1] = axis.range;
+  if (panel.kind === "bump") {
+    // Rank 1 belongs on top; the axis runs downhill on purpose.
+    return { py: axisMapper(axis, top, bottom, false), ticksShown: axis.ticks };
+  }
   if (axis.broken) {
     const [g0, g1] = axis.broken;
     const lowFrac = 0.12;
@@ -281,13 +287,14 @@ function renderAxes(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame, rotate
       );
     } else {
       const label = panel.x.tickLabels ? panel.x.tickLabels[i] : tickLabel(t, false);
+      const weight = panel.kind === "violin" && panel.series[i]?.bold ? ` font-weight="600"` : "";
       if (rotated) {
         out.push(
-          `<text x="${fmt(xp)}" y="${fmt(f.bottom + 14)}" font-size="8.5" fill="${axCol}" ` +
+          `<text x="${fmt(xp)}" y="${fmt(f.bottom + 14)}" font-size="8.5" fill="${axCol}"${weight} ` +
           `text-anchor="end" transform="rotate(-45 ${fmt(xp)} ${fmt(f.bottom + 14)})">${escapeXml(label)}</text>`,
         );
       } else {
-        out.push(textAnchored(xp, f.bottom + 14, label, 8.5, "middle", `fill="${axCol}"`));
+        out.push(textAnchored(xp, f.bottom + 14, label, 8.5, "middle", `fill="${axCol}"${weight}`));
       }
     }
   });
@@ -303,7 +310,12 @@ function renderAxes(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame, rotate
     if (spec.frame !== "none") {
       out.push(line(f.left, yp, f.left - dir * tickLen, yp, `stroke="${axCol}" stroke-width="0.9"`));
     }
-    out.push(logAwareLabel(f.left - 7, yp + 3, t, panel.y.scale === "log", "end", axCol));
+    if (panel.y.tickLabels) {
+      const label = panel.y.tickLabels[panel.y.ticks.indexOf(t)] ?? tickLabel(t, false);
+      out.push(textAnchored(f.left - 7, yp + 3, label, 8.5, "end", `fill="${axCol}"`));
+    } else {
+      out.push(logAwareLabel(f.left - 7, yp + 3, t, panel.y.scale === "log", "end", axCol));
+    }
   }
   if (panel.y.scale === "log" && spec.frame !== "none") {
     for (const t of panel.y.minorTicks ?? []) {
@@ -321,7 +333,7 @@ function renderAxes(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame, rotate
   // Axis titles.
   const xTitle = axisTitle(panel.x);
   const yTitle = axisTitle(panel.y);
-  out.push(textAnchored((f.left + f.right) / 2, f.bottom + (rotated ? 30 : 28), xTitle, 10, "middle", `fill="${axCol}"`));
+  out.push(textAnchored((f.left + f.right) / 2, f.bottom + (rotated ? 38 : 28), xTitle, 10, "middle", `fill="${axCol}"`));
   out.push(
     `<text x="${fmt(f.left - 34)}" y="${fmt((f.top + f.bottom) / 2)}" font-size="10" fill="${axCol}" ` +
     `text-anchor="middle" transform="rotate(-90 ${fmt(f.left - 34)} ${fmt((f.top + f.bottom) / 2)})">` +
@@ -445,9 +457,28 @@ function renderSeries(fig: Figure, panel: Panel, spec: StyleSpec, f: Frame): str
     });
   }
 
+  // Filled bands: violin bodies and any closed outline.
+  for (const s of panel.series) {
+    if (s.draw !== "band") continue;
+    const color = seriesColor(fig.style, fig.mono, s.color);
+    const pts = s.points.map((p) => `${fmt(f.px(p.x))},${fmt(f.py(p.y))}`).join(" ");
+    out.push(
+      `<polygon points="${pts}" fill="${fig.mono ? `url(#hatch${s.color % 4})` : color}" ` +
+      `opacity="${fig.mono ? 0.75 : 0.55}" stroke="${color}" stroke-width="0.9"/>`,
+    );
+    if (s.stats) {
+      const cx = f.px((s.points[0].x + s.points[s.points.length - 1].x) / 2);
+      const bw = 5;
+      out.push(rect(cx - bw / 2, f.py(s.stats.q3), bw, Math.abs(f.py(s.stats.q1) - f.py(s.stats.q3)),
+        `fill="#ffffff" opacity="0.9" stroke="#262626" stroke-width="0.7"`));
+      out.push(line(cx - bw / 2, f.py(s.stats.median), cx + bw / 2, f.py(s.stats.median),
+        `stroke="#262626" stroke-width="1.4"`));
+    }
+  }
+
   // Lines, steps, scatter.
   for (const s of panel.series) {
-    if (s.draw === "bar") continue;
+    if (s.draw === "bar" || s.draw === "band") continue;
     const py = s.y2 && f.py2 ? f.py2 : f.py;
     const color = seriesColor(fig.style, fig.mono, s.color);
     const da = dashArray(s.dash, lw);
@@ -589,6 +620,95 @@ function renderColorbar(fig: Figure, panel: Panel, f: Frame): string {
     `text-anchor="middle" transform="rotate(90 ${fmt(cbX + 32)} ${fmt((f.top + f.bottom) / 2)})">` +
     `${escapeXml(cbTitle)}</text>`,
   );
+  return out.join("\n");
+}
+
+/* ------------------------------------------------------------------ */
+/* Radar                                                               */
+/* ------------------------------------------------------------------ */
+
+function renderRadarPanel(fig: Figure, panel: Panel, spec: StyleSpec, W: number, H: number): string {
+  const out: string[] = [];
+  const entries = panel.legend.entries;
+  const legendW = entries.length > 0 ? legendWidth(panel.legend) : 0;
+  const cx = (W - legendW) / 2;
+  const cy = (H - 26) / 2 + 4;
+  const R = Math.max(Math.min(cx - 64, cy - 30), 40);
+  const S = panel.x.ticks.length;
+  const rMax = panel.y.range[1];
+  const angle = (s: number): number => -Math.PI / 2 + (s * 2 * Math.PI) / S;
+  const at = (s: number, v: number): [number, number] => {
+    const r = (Math.max(v, 0) / rMax) * R;
+    return [cx + r * Math.cos(angle(s)), cy + r * Math.sin(angle(s))];
+  };
+
+  // Rings and spokes; the grid artifact thickens the rings.
+  const gridOn = spec.gridAlways || fig.artifacts.includes("grid-major");
+  const ringTicks = panel.y.ticks.filter((t) => t > 0);
+  for (const t of ringTicks) {
+    const rr = (t / rMax) * R;
+    out.push(
+      `<circle cx="${fmt(cx)}" cy="${fmt(cy)}" r="${fmt(rr)}" fill="none" ` +
+      `stroke="${spec.gridColor}" stroke-width="${gridOn ? 0.9 : 0.5}" opacity="${gridOn ? 0.9 : 0.65}"/>`,
+    );
+    out.push(textAnchored(cx + 3, cy - rr - 2, tickLabel(t, false), 6.5, "start", `fill="#8c8c8c"`));
+  }
+  for (let s = 0; s < S; s++) {
+    const [ex, ey] = at(s, rMax);
+    out.push(line(cx, cy, ex, ey, `stroke="${spec.gridColor}" stroke-width="0.6" opacity="0.8"`));
+    const label = panel.x.tickLabels?.[s] ?? String(s);
+    const lx = cx + (R + 10) * Math.cos(angle(s));
+    const ly = cy + (R + 10) * Math.sin(angle(s));
+    const anchor = Math.abs(Math.cos(angle(s))) < 0.35 ? "middle" : Math.cos(angle(s)) > 0 ? "start" : "end";
+    out.push(textAnchored(lx, ly + 3, label, 8.5, anchor, `fill="#262626"`));
+  }
+
+  // One polygon per method, ours drawn last so it sits on top.
+  const ordered = [...panel.series].sort((a, b) => Number(a.role === "ours") - Number(b.role === "ours"));
+  for (const s of ordered) {
+    const color = seriesColor(fig.style, fig.mono, s.color);
+    const pts = s.points.map((p) => at(p.x, p.y));
+    out.push(poly(pts, `fill="${color}" fill-opacity="0.1" stroke="${color}" ` +
+      `stroke-width="${s.role === "ours" ? 1.8 : 1.2}"` +
+      (dashArray(s.dash, 1.2) ? ` stroke-dasharray="${dashArray(s.dash, 1.2)}"` : "")));
+    for (const p of s.points) {
+      const [mx, my] = at(p.x, p.y);
+      out.push(markerGlyph(s.marker, mx, my, 2.6, color));
+    }
+  }
+
+  // The radial lie.
+  if (fig.artifacts.includes("normalized-to-ours")) {
+    out.push(textAnchored(cx, H - 8, "(normalized to ours = 1.0)", 8, "middle",
+      `fill="#666666" font-style="italic"`));
+  }
+
+  for (const a of panel.annotations) {
+    if (a.type === "text" && a.boxed) {
+      const [bx, by] = at(a.at.x, a.at.y);
+      const w = a.text.length * 4.6 + 8;
+      out.push(rect(bx + 6, by - 16, w, 13, `fill="#ffffff" stroke="#262626" stroke-width="0.7" opacity="0.92"`));
+      out.push(textAnchored(bx + 10, by - 6.5, a.text, 8.5, "start", `fill="#262626"`));
+    }
+  }
+
+  if (entries.length > 0) {
+    const lh = 13;
+    const lx = W - legendW - 6;
+    const ly = 10;
+    if (spec.legendBox) {
+      out.push(rect(lx, ly, legendW, entries.length * lh + 8, `fill="#ffffff" opacity="0.9" stroke="#8c8c8c" stroke-width="0.7"`));
+    }
+    entries.forEach((e, i) => {
+      const ey = ly + 10 + i * lh;
+      const color = seriesColor(fig.style, fig.mono, e.color);
+      out.push(line(lx + 5, ey, lx + 21, ey, `stroke="${color}" stroke-width="1.6"`));
+      out.push(markerGlyph(e.marker, lx + 13, ey, 2.7, color));
+      const series = panel.series.find((s) => s.id === e.seriesId);
+      const bold = series?.bold ? ` font-weight="600"` : "";
+      out.push(textAnchored(lx + 26, ey + 3, e.label, 8.5, "start", `fill="#262626"${bold}`));
+    });
+  }
   return out.join("\n");
 }
 

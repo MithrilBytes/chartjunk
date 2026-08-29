@@ -10,7 +10,8 @@ import { texText } from "../tex.js";
 export const TIKZ_PREAMBLE = `\\usepackage{pgfplots}
 \\pgfplotsset{compat=1.18}
 \\usetikzlibrary{patterns}
-\\usepgfplotslibrary{colormaps}`;
+\\usepgfplotslibrary{colormaps}
+\\usepgfplotslibrary{polar}`;
 
 const SIZE_CM: Record<Figure["size"], [number, number]> = {
   single: [8.6, 6.4],
@@ -69,6 +70,7 @@ export function renderTikz(fig: Figure): string {
 function renderAxisEnv(
   fig: Figure, panel: Panel, spec: StyleSpec, w: number, h: number, atX: number, atY: number,
 ): string {
+  if (panel.kind === "radar") return renderPolarEnv(fig, panel, spec, w, h, atX, atY);
   const out: string[] = [];
   // pgfplots reads bare "at" coordinates as points; say cm explicitly.
   const opts: string[] = [
@@ -77,6 +79,7 @@ function renderAxisEnv(
     `width=${cm(w)}cm`,
     `height=${cm(h)}cm`,
   ];
+  if (panel.kind === "bump") opts.push("y dir=reverse");
 
   const yCrop = cropLow(panel);
   const [x0, x1] = panel.x.range;
@@ -89,8 +92,14 @@ function renderAxisEnv(
 
   opts.push(`xtick={${panel.x.ticks.map(num).join(",")}}`);
   if (panel.x.tickLabels) {
-    opts.push(`xticklabels={${panel.x.tickLabels.map((s) => `{${texText(s)}}`).join(",")}}`);
-    if (fig.artifacts.includes("rotated-ticks") && (panel.kind === "bar" || panel.kind === "heatmap")) {
+    const labels = panel.x.tickLabels.map((s, i) => {
+      const tex = texText(s);
+      const bold = panel.kind === "violin" && panel.series[i]?.bold;
+      return bold ? `{\\textbf{${tex}}}` : `{${tex}}`;
+    });
+    opts.push(`xticklabels={${labels.join(",")}}`);
+    const rotates = panel.kind === "bar" || panel.kind === "heatmap" || panel.kind === "violin";
+    if (fig.artifacts.includes("rotated-ticks") && rotates) {
       opts.push("x tick label style={rotate=45, anchor=east, font=\\tiny}");
     }
   }
@@ -235,11 +244,97 @@ function renderTikzSeries(fig: Figure, panel: Panel, spec: StyleSpec, yCrop: num
         [...fwd, ...back].join(" ") + "} --cycle;",
       );
     }
+    if (s.draw === "band") {
+      const color = `cj${s.color % (fig.mono ? spec.monoColors.length : spec.colors.length)}`;
+      const fill = fig.mono
+        ? `pattern=${BAR_PATTERNS[s.color % 4]}, pattern color=black!60`
+        : `fill=${color}, fill opacity=0.5`;
+      out.push(
+        `\\addplot[draw=${color}, line width=0.5pt, ${fill}, forget plot] coordinates {` +
+        s.points.map((p) => coord(p)).join(" ") + "} --cycle;",
+      );
+      if (s.stats) {
+        const cx = (s.points[0].x + s.points[s.points.length - 1].x) / 2;
+        out.push(
+          `\\draw[black, fill=white, line width=0.4pt] ` +
+          `(axis cs:${num(cx - 0.06)},${num(s.stats.q1)}) rectangle (axis cs:${num(cx + 0.06)},${num(s.stats.q3)});`,
+        );
+        out.push(
+          `\\draw[black, line width=0.9pt] (axis cs:${num(cx - 0.06)},${num(s.stats.median)}) -- ` +
+          `(axis cs:${num(cx + 0.06)},${num(s.stats.median)});`,
+        );
+      }
+      continue;
+    }
     if (s.draw === "bar") {
       out.push(barPlot(fig, s, panel, spec, bars.indexOf(s), nBars));
     } else {
       out.push(seriesPlot(fig, s, panel, spec, yCrop));
     }
+  }
+  return out.join("\n");
+}
+
+/** The radar: a polar axis, one closed polygon per method. */
+function renderPolarEnv(
+  fig: Figure, panel: Panel, spec: StyleSpec, w: number, h: number, atX: number, atY: number,
+): string {
+  const out: string[] = [];
+  const S = panel.x.ticks.length;
+  const angleOf = (s: number): number => ((90 - (s * 360) / S) % 360 + 360) % 360;
+  const angles = Array.from({ length: S }, (_, s) => angleOf(s));
+  const labels = (panel.x.tickLabels ?? angles.map(String)).map((s) => `{${texText(s)}}`);
+  const opts: string[] = [
+    `at={(${cm(atX)}cm,${cm(atY)}cm)}`,
+    "anchor=north west",
+    `width=${cm(Math.min(w, h) + 1)}cm`,
+    "ymin=0",
+    `ymax=${num(panel.y.range[1])}`,
+    `xtick={${angles.map(num).join(",")}}`,
+    `xticklabels={${labels.join(",")}}`,
+    `ytick={${panel.y.ticks.filter((t) => t > 0).map(num).join(",")}}`,
+    "grid=both",
+    "tick label style={font=\\tiny}",
+    "y tick label style={anchor=east, font=\\tiny}",
+  ];
+  const entries = panel.legend.entries;
+  if (entries.length > 0) {
+    opts.push("legend pos=outer north east");
+    opts.push("legend cell align=left");
+    opts.push(`legend style={font=\\scriptsize, draw=${spec.legendBox ? "black!40" : "none"}, fill=white}`);
+  }
+  out.push(`\\begin{polaraxis}[\n  ${opts.join(",\n  ")}\n]`);
+  const ordered = [...panel.series].sort((a, b) => Number(a.role === "ours") - Number(b.role === "ours"));
+  for (const s of ordered) {
+    const color = `cj${s.color % (fig.mono ? spec.monoColors.length : spec.colors.length)}`;
+    const width = s.role === "ours" ? 1.3 : 0.9;
+    out.push(
+      `\\addplot[${color}, ${TIKZ_DASH[s.dash]}, line width=${num(width)}pt, ` +
+      `mark=${TIKZ_MARKS[s.marker]}, mark size=1.3pt, fill=${color}, fill opacity=0.08, forget plot] coordinates {` +
+      s.points.map((p) => `(${num(angleOf(p.x))},${num(p.y)})`).join(" ") + "} --cycle;",
+    );
+  }
+  for (const a of panel.annotations) {
+    if (a.type === "text" && a.boxed) {
+      out.push(
+        `\\node[draw=black!70, fill=white, inner sep=2pt, font=\\scriptsize, anchor=south west] at ` +
+        `(axis cs:${num(angleOf(a.at.x))},${num(a.at.y)}) {${texText(a.text)}};`,
+      );
+    }
+  }
+  for (const e of entries) {
+    const color = `cj${e.color % (fig.mono ? spec.monoColors.length : spec.colors.length)}`;
+    out.push(`\\addlegendimage{${color}, ${TIKZ_DASH[e.dash]}, mark=${TIKZ_MARKS[e.marker]}, mark size=1.3pt}`);
+    const series = panel.series.find((s) => s.id === e.seriesId);
+    const label = series?.bold ? `\\textbf{${texText(e.label)}}` : texText(e.label);
+    out.push(`\\addlegendentry{${label}}`);
+  }
+  out.push("\\end{polaraxis}");
+  if (fig.artifacts.includes("normalized-to-ours")) {
+    out.push(
+      `\\node[font=\\scriptsize\\itshape, text=black!55, anchor=north] at ` +
+      `(${cm(atX + (Math.min(w, h) + 1) / 2)}cm, ${cm(atY - Math.min(w, h) - 1.1)}cm) {(normalized to ours = 1.0)};`,
+    );
   }
   return out.join("\n");
 }
