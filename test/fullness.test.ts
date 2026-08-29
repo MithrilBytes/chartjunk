@@ -9,9 +9,17 @@ const ALWAYS_ON: Record<string, ArtifactId[]> = {
   scatter: ["orphan-legend", "ours-bold", "r-squared"],
   bar: ["orphan-legend", "ours-bold", "error-bars", "significance-stars"],
   pareto: ["orphan-legend", "ours-bold", "infeasible-region"],
-  heatmap: ["colorbar-unit"],
+  heatmap: ["colorbar-unit", "confusion-diagonal", "pairwise-grid"],
   phase: ["phase-regions", "hatched-unstable"],
-  panels: ["orphan-legend", "ours-bold", "error-bars", "significance-stars", "r-squared"],
+  roc: ["orphan-legend", "ours-bold", "auc-in-legend", "random-diagonal"],
+  profile: ["orphan-legend", "ours-bold"],
+  bump: ["orphan-legend", "ours-bold", "rank-inverted"],
+  radar: ["orphan-legend", "ours-bold", "normalized-to-ours"],
+  violin: ["ours-bold", "kde-from-nothing", "significance-stars"],
+  panels: [
+    "orphan-legend", "ours-bold", "error-bars", "significance-stars", "r-squared",
+    "auc-in-legend", "random-diagonal",
+  ],
 };
 
 describe("fullness", () => {

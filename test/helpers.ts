@@ -72,4 +72,7 @@ export const DIAL_CORNERS = [
   { density: 0, junk: 1, confidence: 0, gobbledygook: 1 },
 ] as const;
 
-export const PLOT_KINDS = ["line", "scatter", "bar", "heatmap", "pareto", "phase", "panels"] as const;
+export const PLOT_KINDS = [
+  "line", "scatter", "bar", "heatmap", "pareto", "phase",
+  "roc", "profile", "bump", "radar", "violin", "panels",
+] as const;

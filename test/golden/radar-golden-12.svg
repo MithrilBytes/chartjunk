@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 402" width="480" height="402" font-family="'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" role="img">
+<title>Figure 1: Scaling of Score with Capability for SEN (ours) and baselines. Results averaged over a single run.</title>
+<defs><pattern id="hatch0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch1" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(135)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch2" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern><pattern id="hatch3" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="5" stroke="#555555" stroke-width="1"/></pattern></defs>
+<rect x="0" y="0" width="480" height="402" fill="#ffffff"/>
+<g transform="translate(0,0)">
+<circle cx="172.6" cy="171" r="25.86" fill="none" stroke="#b0b0b0" stroke-width="0.9" opacity="0.9"/>
+<text x="175.6" y="143.14" font-size="6.5" text-anchor="start" fill="#8c8c8c">0.25</text>
+<circle cx="172.6" cy="171" r="51.71" fill="none" stroke="#b0b0b0" stroke-width="0.9" opacity="0.9"/>
+<text x="175.6" y="117.29" font-size="6.5" text-anchor="start" fill="#8c8c8c">0.5</text>
+<circle cx="172.6" cy="171" r="77.57" fill="none" stroke="#b0b0b0" stroke-width="0.9" opacity="0.9"/>
+<text x="175.6" y="91.43" font-size="6.5" text-anchor="start" fill="#8c8c8c">0.75</text>
+<circle cx="172.6" cy="171" r="103.43" fill="none" stroke="#b0b0b0" stroke-width="0.9" opacity="0.9"/>
+<text x="175.6" y="65.57" font-size="6.5" text-anchor="start" fill="#8c8c8c">1</text>
+<line x1="172.6" y1="171" x2="172.6" y2="62.4" stroke="#b0b0b0" stroke-width="0.6" opacity="0.8"/>
+<text x="172.6" y="55.4" font-size="8.5" text-anchor="middle" fill="#262626">Speed</text>
+<line x1="172.6" y1="171" x2="266.65" y2="116.7" stroke="#b0b0b0" stroke-width="0.6" opacity="0.8"/>
+<text x="275.31" y="114.7" font-size="8.5" text-anchor="start" fill="#262626">Wumpin-alignment</text>
+<line x1="172.6" y1="171" x2="266.65" y2="225.3" stroke="#b0b0b0" stroke-width="0.6" opacity="0.8"/>
+<text x="275.31" y="233.3" font-size="8.5" text-anchor="start" fill="#262626">Renormalized taste</text>
+<line x1="172.6" y1="171" x2="172.6" y2="279.6" stroke="#b0b0b0" stroke-width="0.6" opacity="0.8"/>
+<text x="172.6" y="292.6" font-size="8.5" text-anchor="middle" fill="#262626">Vibes</text>
+<line x1="172.6" y1="171" x2="78.55" y2="225.3" stroke="#b0b0b0" stroke-width="0.6" opacity="0.8"/>
+<text x="69.89" y="233.3" font-size="8.5" text-anchor="end" fill="#262626">Quasi-fidelity</text>
+<line x1="172.6" y1="171" x2="78.55" y2="116.7" stroke="#b0b0b0" stroke-width="0.6" opacity="0.8"/>
+<text x="69.89" y="114.7" font-size="8.5" text-anchor="end" fill="#262626">Calibration</text>
+<polygon points="172.6,89.47 215.01,146.52 214.07,194.94 172.6,260.03 130.2,195.48 118.38,139.69" fill="#ff7f0e" fill-opacity="0.1" stroke="#ff7f0e" stroke-width="1.2"/>
+<rect x="170" y="86.87" width="5.2" height="5.2" fill="#ff7f0e"/>
+<rect x="212.41" y="143.92" width="5.2" height="5.2" fill="#ff7f0e"/>
+<rect x="211.47" y="192.34" width="5.2" height="5.2" fill="#ff7f0e"/>
+<rect x="170" y="257.43" width="5.2" height="5.2" fill="#ff7f0e"/>
+<rect x="127.6" y="192.88" width="5.2" height="5.2" fill="#ff7f0e"/>
+<rect x="115.78" y="137.09" width="5.2" height="5.2" fill="#ff7f0e"/>
+<polygon points="172.6,80.81 217.27,145.21 218.43,197.46 172.6,227.15 92.81,217.07 115.45,138" fill="#2ca02c" fill-opacity="0.1" stroke="#2ca02c" stroke-width="1.2"/>
+<polygon points="172.6,77.69 169.74,83.41 175.46,83.41" fill="#2ca02c"/>
+<polygon points="217.27,142.09 214.41,147.81 220.13,147.81" fill="#2ca02c"/>
+<polygon points="218.43,194.34 215.57,200.06 221.29,200.06" fill="#2ca02c"/>
+<polygon points="172.6,224.03 169.74,229.75 175.46,229.75" fill="#2ca02c"/>
+<polygon points="92.81,213.95 89.95,219.67 95.67,219.67" fill="#2ca02c"/>
+<polygon points="115.45,134.88 112.59,140.6 118.31,140.6" fill="#2ca02c"/>
+<polygon points="172.6,74.27 219.77,143.76 221.7,199.35 172.6,268.45 83.12,222.66 111.38,135.66" fill="#1f77b4" fill-opacity="0.1" stroke="#1f77b4" stroke-width="1.8"/>
+<polygon points="172.6,69.85 173.69,72.77 176.8,72.91 174.37,74.85 175.2,77.85 172.6,76.13 170,77.85 170.83,74.85 168.4,72.91 171.51,72.77" fill="#1f77b4"/>
+<polygon points="219.77,139.34 220.86,142.26 223.98,142.4 221.54,144.34 222.37,147.34 219.77,145.62 217.17,147.34 218.01,144.34 215.57,142.4 218.68,142.26" fill="#1f77b4"/>
+<polygon points="221.7,194.93 222.8,197.85 225.91,197.98 223.47,199.92 224.3,202.93 221.7,201.21 219.11,202.93 219.94,199.92 217.5,197.98 220.61,197.85" fill="#1f77b4"/>
+<polygon points="172.6,264.03 173.69,266.94 176.8,267.08 174.37,269.02 175.2,272.02 172.6,270.3 170,272.02 170.83,269.02 168.4,267.08 171.51,266.94" fill="#1f77b4"/>
+<polygon points="83.12,218.24 84.22,221.16 87.33,221.29 84.89,223.23 85.72,226.23 83.12,224.52 80.53,226.23 81.36,223.23 78.92,221.29 82.03,221.16" fill="#1f77b4"/>
+<polygon points="111.38,131.24 112.47,134.15 115.59,134.29 113.15,136.23 113.98,139.23 111.38,137.51 108.79,139.23 109.62,136.23 107.18,134.29 110.29,134.15" fill="#1f77b4"/>
+<text x="172.6" y="352" font-size="8" text-anchor="middle" fill="#666666" font-style="italic">(normalized to ours = 1.0)</text>
+<rect x="339.2" y="10" width="134.8" height="60" fill="#ffffff" opacity="0.9" stroke="#8c8c8c" stroke-width="0.7"/>
+<line x1="344.2" y1="20" x2="360.2" y2="20" stroke="#1f77b4" stroke-width="1.6"/>
+<polygon points="352.2,15.41 353.33,18.44 356.57,18.58 354.03,20.6 354.9,23.71 352.2,21.93 349.5,23.71 350.37,20.6 347.83,18.58 351.07,18.44" fill="#1f77b4"/>
+<text x="365.2" y="23" font-size="8.5" text-anchor="start" fill="#262626" font-weight="600">SEN (ours)</text>
+<line x1="344.2" y1="33" x2="360.2" y2="33" stroke="#ff7f0e" stroke-width="1.6"/>
+<rect x="349.5" y="30.3" width="5.4" height="5.4" fill="#ff7f0e"/>
+<text x="365.2" y="36" font-size="8.5" text-anchor="start" fill="#262626">Renormalized baseline</text>
+<line x1="344.2" y1="46" x2="360.2" y2="46" stroke="#2ca02c" stroke-width="1.6"/>
+<polygon points="352.2,42.76 349.23,48.7 355.17,48.7" fill="#2ca02c"/>
+<text x="365.2" y="49" font-size="8.5" text-anchor="start" fill="#262626">Quasi-SOTA [24]</text>
+<line x1="344.2" y1="59" x2="360.2" y2="59" stroke="#d62728" stroke-width="1.6"/>
+<polygon points="352.2,55.49 355.17,59 352.2,62.51 349.23,59" fill="#d62728"/>
+<text x="365.2" y="62" font-size="8.5" text-anchor="start" fill="#262626">Quasi-oracle</text>
+</g>
+<text x="14" y="372" font-size="10" text-anchor="start" fill="#262626">Scaling of Score with Capability for SEN (ours) and baselines. Results averaged over a</text>
+<text x="14" y="385" font-size="10" text-anchor="start" fill="#262626">single run.</text>
+</svg>

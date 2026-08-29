@@ -8,8 +8,16 @@ import { generateFigure } from "../src/index.js";
 import type { Axis, Figure, Series } from "../src/index.js";
 
 const SEEDS = ["stable-a", "stable-b", 3];
-const KINDS = ["line", "scatter", "bar", "heatmap", "pareto", "phase"] as const;
+const KINDS = [
+  "line", "scatter", "bar", "heatmap", "pareto", "phase",
+  "roc", "profile", "bump", "radar", "violin",
+] as const;
 const STOPS = Array.from({ length: 11 }, (_, i) => i / 10);
+
+/** Confidence owns the AUC digits; everything around them must hold. */
+function stripConfidenceText(label: string): string {
+  return label.replace(/ \(AUC = [0-9.]+\)$/, "");
+}
 
 function axisCore(a: Axis | undefined): unknown {
   if (!a) return undefined;
@@ -72,8 +80,8 @@ describe("dial stability", () => {
             const oursNow = panel.series.find((s) => s.role === "ours");
             const oursRef = ref.series.find((s) => s.role === "ours");
             expect(oursNow?.points.map((p) => p.x)).toEqual(oursRef?.points.map((p) => p.x));
-            expect(panel.legend.entries.map((e) => e.label))
-              .toEqual(ref.legend.entries.map((e) => e.label));
+            expect(panel.legend.entries.map((e) => stripConfidenceText(e.label)))
+              .toEqual(ref.legend.entries.map((e) => stripConfidenceText(e.label)));
             expect(panel.matrix?.values).toEqual(ref.matrix?.values);
           });
         }

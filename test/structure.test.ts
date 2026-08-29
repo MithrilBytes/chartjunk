@@ -113,14 +113,30 @@ describe("structure invariants", () => {
   });
 
   it("exactly one bold ours where the kind has methods", () => {
+    const oursKinds = ["line", "scatter", "bar", "pareto", "roc", "profile", "bump", "radar", "violin"];
     for (const fig of figs) {
       for (const panel of fig.panels) {
         const ours = panel.series.filter((s) => s.role === "ours");
-        if (["line", "scatter", "bar", "pareto"].includes(panel.kind)) {
+        if (oursKinds.includes(panel.kind)) {
           expect(ours.length, `${fig.seed}/${panel.kind}`).toBe(1);
           expect(ours[0].bold, fig.seed).toBe(true);
         } else {
           expect(ours.length, `${fig.seed}/${panel.kind}`).toBe(0);
+        }
+      }
+    }
+  });
+
+  it("violin stats sit inside their axis range", () => {
+    for (const fig of figs) {
+      for (const panel of fig.panels) {
+        for (const s of panel.series) {
+          if (!s.stats) continue;
+          for (const v of [s.stats.median, s.stats.q1, s.stats.q3]) {
+            expect(inRange(v, panel.y, 1e-9), `${fig.seed} stat ${v}`).toBe(true);
+          }
+          expect(s.stats.q1).toBeLessThanOrEqual(s.stats.median);
+          expect(s.stats.median).toBeLessThanOrEqual(s.stats.q3);
         }
       }
     }

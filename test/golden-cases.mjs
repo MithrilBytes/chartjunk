@@ -8,4 +8,9 @@ export const GOLDEN_CASES = [
   { kind: "pareto", seed: "golden-6" },
   { kind: "phase", seed: "golden-7" },
   { kind: "panels", seed: "golden-8" },
+  { kind: "roc", seed: "golden-9" },
+  { kind: "profile", seed: "golden-10" },
+  { kind: "bump", seed: "golden-11" },
+  { kind: "radar", seed: "golden-12" },
+  { kind: "violin", seed: "golden-13" },
 ];
