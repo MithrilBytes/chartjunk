@@ -21,7 +21,10 @@ export function buildLine(ctx: PanelCtx): Panel {
   const plans = planSeries(ctx, n);
   const xr = xRange(words);
   const ts = tGrid(nPts);
-  const xs = ts.map((t) => tToX(t, xr, words.xLog));
+  // With the extrapolation gag the data politely stops early and leaves
+  // the last stretch of the axis to the dashed projection.
+  const extrap = ctx.fired.has("extrapolated-region") && ctx.p === 0;
+  const xs = ts.map((t) => tToX(extrap ? t * 0.72 : t, xr, words.xLog));
 
   // One family per panel; every method's curve comes from it. Walks stay
   // off log axes so the analytic range envelope below holds.
@@ -202,6 +205,42 @@ export function buildLine(ctx: PanelCtx): Panel {
   if (ctx.fired.has("zero-suppressed")) {
     y.zeroSuppressed = true;
     mark(ctx, "zero-suppressed");
+  }
+
+  // The projection: ours continues, dashed and log-linearly straight,
+  // from its last two points to the edge of the axis, where a star and a
+  // box assure the reader it is merely projected.
+  if (extrap && nPts >= 2) {
+    const ours = series[0];
+    const a = ours.points[nPts - 2];
+    const b = ours.points[nPts - 1];
+    const tv = (v: number): number => (words.yLog ? Math.log10(Math.max(v, 1e-12)) : v);
+    const fv = (v: number): number => (words.yLog ? Math.pow(10, v) : v);
+    const tx = (v: number): number => (words.xLog ? Math.log10(v) : v);
+    const slope = (tv(b.y) - tv(a.y)) / Math.max(tx(b.x) - tx(a.x), 1e-12);
+    const steps = 6;
+    const projPoints = Array.from({ length: steps }, (_, k) => {
+      const t = 0.72 + ((k + 1) / steps) * 0.28;
+      const px = tToX(t, xr, words.xLog);
+      const raw = fv(tv(b.y) + slope * (tx(px) - tx(b.x)));
+      const yv = Math.min(Math.max(raw, y.range[0]), y.range[1]);
+      return { x: px, y: yv };
+    });
+    series.push({
+      id: `s${ctx.p}-projection`,
+      label: "",
+      role: "reference",
+      draw: "line",
+      points: [b, ...projPoints],
+      marker: "none",
+      dash: "dashed",
+      color: ours.color,
+      bold: false,
+    });
+    const end = projPoints[projPoints.length - 1];
+    annotations.push({ type: "stars", at: end, count: 1 });
+    annotations.push({ type: "text", at: end, text: "projected", boxed: true });
+    mark(ctx, "extrapolated-region");
   }
 
   return {

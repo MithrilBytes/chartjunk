@@ -87,6 +87,20 @@ export function buildScatter(ctx: PanelCtx): Panel {
   applyLogNote(ctx, y);
   if (!(ctx.fired.has("log-scale-note") && y.scale === "log")) applyLogNote(ctx, x);
 
+  // Embedding cosplay: the axes get renamed, the data stays put, and the
+  // caption will assert cluster separation. If a log scale was already in
+  // play, the reader now faces a logarithmic t-SNE axis, as one does.
+  const tf = ctx.root.fork(`axes:${ctx.p}:tsne`);
+  const umap = tf.chance(0.4);
+  if (ctx.fired.has("tsne-axes")) {
+    const stem = umap ? "UMAP" : "t-SNE";
+    x.label = words.xLog ? `${stem} 1 (log scale)` : `${stem} 1`;
+    y.label = words.yLog ? `${stem} 2 (log scale)` : `${stem} 2`;
+    x.unit = undefined;
+    y.unit = undefined;
+    mark(ctx, "tsne-axes");
+  }
+
   // Trend line through the ours cloud, least squares in screen space.
   const fitPts = clouds[0].map((p) => ({
     u: words.xLog ? Math.log10(p.x) : p.x,

@@ -170,8 +170,10 @@ export function pointCount(ctx: PanelCtx): number {
 /**
  * Labels, roles, and style slots for n series. Ours is always slot 0 in
  * construction order; the legend shuffles later. Fixed draws throughout.
+ * markOurs: false borrows the labels without claiming the bold-ours gag,
+ * for kinds where the methods only name rows.
  */
-export function planSeries(ctx: PanelCtx, n: number): SeriesPlan[] {
+export function planSeries(ctx: PanelCtx, n: number, opts?: { markOurs?: boolean }): SeriesPlan[] {
   if (ctx.shared) return ctx.shared.slice(0, Math.max(1, n));
   const sf = ctx.root.fork(`series:${ctx.p}:labels`);
   const g = ctx.dials.gobbledygook;
@@ -184,7 +186,7 @@ export function planSeries(ctx: PanelCtx, n: number): SeriesPlan[] {
     bold: true,
     ...oursStyle,
   });
-  mark(ctx, "ours-bold");
+  if (opts?.markOurs !== false) mark(ctx, "ours-bold");
   // Draw a full hand of baseline labels regardless of n.
   const plainPicks = sf.sample(BASELINES_PLAIN, 4);
   const gobblePicks = sf.sample(BASELINES_GOBBLE, 4);

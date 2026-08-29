@@ -147,6 +147,21 @@ export function buildCaption(
       ok: dials.junk >= 0.7 && extra2Coin < 0.4,
       u: cf.next(),
     },
+    {
+      runs: [{ k: "text", s: `Each violin summarizes ${runsOver} runs.` }],
+      ok: gags.has("kde-from-nothing"),
+      u: cf.next(),
+    },
+    {
+      runs: [{ k: "text", s: "The diagonal denotes chance." }],
+      ok: gags.has("random-diagonal"),
+      u: cf.next(),
+    },
+    {
+      runs: [{ k: "text", s: "Cluster separation is evident." }],
+      ok: gags.has("tsne-axes"),
+      u: cf.next(),
+    },
   ];
 
   // "Best viewed in color." is an artifact in its own right: when it
