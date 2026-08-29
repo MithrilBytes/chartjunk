@@ -3,10 +3,14 @@
 Seeded generator of scientific-looking figures with no underlying data.
 Produces convergence curves on log axes, grouped bars with error bars,
 Pareto frontiers with a shaded region labeled "infeasible", heatmaps with a
-nonsense colorbar unit, phase diagrams, multi-panel grids, a bold "(ours)"
-that always wins (unless told not to), and a legend entry that corresponds
-to nothing on the plot. The same figure comes out in SVG, TikZ/pgfplots,
-HTML, Markdown, plain text, or JSON.
+nonsense colorbar unit (plus confusion-matrix and pairwise win-rate
+flavors), phase diagrams, ROC curves that hug the corner and quote their
+AUC to three decimals, performance profiles after Dolan and More, rank
+bump charts where ours surges to first, capability radars with a spoke for
+Vibes, violins whose silky densities summarize three runs, multi-panel
+grids, a bold "(ours)" that always wins (unless told not to), and a legend
+entry that corresponds to nothing on the plot. The same figure comes out
+in SVG, TikZ/pgfplots, HTML, Markdown, plain text, or JSON.
 
 Live demo: https://mithrilbytes.github.io/chartjunk/
 
@@ -31,7 +35,7 @@ node dist/cli.js -k figure -f json | jq .artifacts
 | Flag | Values |
 | --- | --- |
 | `-s, --seed` | any string or number |
-| `-k, --kind` | `figure`, `line`, `scatter`, `bar`, `heatmap`, `pareto`, `phase`, `panels`, `caption` |
+| `-k, --kind` | `figure`, `line`, `scatter`, `bar`, `heatmap`, `pareto`, `phase`, `roc`, `profile`, `bump`, `radar`, `violin`, `panels`, `caption` |
 | `-f, --format` | `svg`, `tikz`, `html`, `markdown`, `text`, `json` |
 | `--density` | 0 to 1; series, points, panels, insets, secondary axes |
 | `--junk` | 0 to 1; non-data ink: grids, boxes, notes, watermarks |
