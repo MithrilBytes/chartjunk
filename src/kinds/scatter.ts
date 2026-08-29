@@ -176,6 +176,17 @@ export function buildScatter(ctx: PanelCtx): Panel {
   if (ctx.fired.has("marginal-rug")) {
     mark(ctx, "marginal-rug");
   }
+  if (ctx.fired.has("bubble-sizes")) {
+    annotations.push({
+      type: "text",
+      at: {
+        x: posAlong(x.range, 0.72, words.xLog),
+        y: y.range[0] + (y.range[1] - y.range[0]) * 0.05,
+      },
+      text: "marker area: importance (a.u.)",
+    });
+    mark(ctx, "bubble-sizes");
+  }
   if (ctx.fired.has("see-text") && ctx.p === 0) {
     const pt = clouds[0][Math.min(Math.floor(outlierU * nPts), nPts - 1)];
     annotations.push({ type: "text", at: { x: pt.x, y: pt.y }, text: "see text", boxed: true });

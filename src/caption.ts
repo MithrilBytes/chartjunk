@@ -87,6 +87,7 @@ export function buildCaption(
 
   // Boilerplate. Every draw happens whether or not the sentence lands.
   const runsOver = cf.pick([3, 5, 10] as const);
+  const totalN = 900 + cf.int(700);
   const assumption = cf.pick(["2.3", "A", "B.1"] as const);
   const starCite = citeNumber(cf, vocab);
   const lieCoin = cf.next();
@@ -160,6 +161,23 @@ export function buildCaption(
     {
       runs: [{ k: "text", s: "Cluster separation is evident." }],
       ok: gags.has("tsne-axes"),
+      u: cf.next(),
+    },
+    {
+      runs: [{ k: "text", s: "Percentages may not sum to 100 due to rounding." }],
+      ok: gags.has("sum-drift"),
+      mark: "sum-drift",
+      u: cf.next(),
+    },
+    {
+      runs: [{ k: "text", s: `Densities estimated from ${runsOver} samples.` }],
+      ok: gags.has("smoothed-histogram"),
+      u: cf.next(),
+    },
+    {
+      runs: [{ k: "text", s: `In total, n = ${totalN}.` }],
+      ok: gags.has("counts-drift"),
+      mark: "counts-drift",
       u: cf.next(),
     },
   ];
