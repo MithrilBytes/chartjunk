@@ -7,7 +7,8 @@ import type { Annotation, Axis, Figure, Panel, Point, Series } from "../types.js
 import { STYLES, TIKZ_DASH, TIKZ_MARKS, type StyleSpec } from "../styles.js";
 import { texText } from "../tex.js";
 
-export const TIKZ_PREAMBLE = `\\usepackage{pgfplots}
+export const TIKZ_PREAMBLE = `\\usepackage{amsmath}
+\\usepackage{pgfplots}
 \\pgfplotsset{compat=1.18}
 \\usetikzlibrary{patterns}
 \\usepgfplotslibrary{colormaps}
