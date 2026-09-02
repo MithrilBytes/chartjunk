@@ -14,7 +14,7 @@ const CHAR_MAP: readonly [string, string][] = [
   ["τ", "\\tau"],
   ["★", "\\star"],
   ["∝", "\\propto"],
-  ["√", "\\sqrt "],
+  ["√", "\\surd "],
   ["²", "^{2}"],
   ["³", "^{3}"],
   ["₂", "_{2}"],
@@ -30,7 +30,10 @@ export function needsMath(s: string): boolean {
 
 /** Map a Unicode label to TeX math source (no surrounding dollars). */
 export function texify(s: string): string {
-  let out = s;
+  let out = s
+    .replaceAll("%", "\\%")
+    .replaceAll("&", "\\&")
+    .replaceAll("#", "\\#");
   for (const [from, to] of CHAR_MAP) out = out.split(from).join(to);
   return out;
 }
@@ -47,7 +50,10 @@ export function texText(s: string): string {
     .replaceAll("#", "\\#")
     .replaceAll("_", "\\_")
     .replaceAll("{", "\\{")
-    .replaceAll("}", "\\}");
+    .replaceAll("}", "\\}")
+    .replaceAll("$", "\\textdollar{}")
+    .replaceAll("^", "\\textasciicircum{}")
+    .replaceAll("~", "\\textasciitilde{}");
   for (const [from, to] of CHAR_MAP) {
     out = out.split(from).join(`$${to}$`);
   }
