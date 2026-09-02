@@ -55,12 +55,10 @@ jobs:
             echo "published=false" >> "$GITHUB_OUTPUT"
           fi
       - uses: wtfjoke/setup-tectonic@v3
-        if: steps.check.outputs.published == 'false'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           tectonic-version: "0.17.0"
       - name: Cache Tectonic packages
-        if: steps.check.outputs.published == 'false'
         uses: actions/cache@v4
         with:
           path: ~/.cache/Tectonic
@@ -94,6 +92,15 @@ jobs:
             sleep 20
           done
           gh release view "daily-$seed" >/dev/null
+      - name: Compile the week ahead
+        run: |
+          node test/compile-corpus.mjs --out /tmp/corpus --days 7
+          for i in 1 2 3; do
+            tectonic /tmp/corpus/corpus.tex --outdir /tmp/corpus && break
+            echo "tectonic attempt $i failed; retrying in 30s"
+            sleep 30
+          done
+          test -f /tmp/corpus/corpus.pdf
       - name: Report failure as an issue
         if: failure()
         env:
