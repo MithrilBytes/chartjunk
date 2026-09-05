@@ -59,7 +59,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           tectonic-version: "0.17.0"
       - name: Cache Tectonic packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/Tectonic
           key: tectonic-bundle-${{ runner.os }}
