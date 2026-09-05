@@ -31,7 +31,7 @@ jobs:
           sed -i "s#href=\"style.css\"#href=\"style.css?v=$v\"#" site/index.html
           sed -i "s#src=\"main.js\"#src=\"main.js?v=$v\"#" site/index.html
           sed -i "s#./chartjunk.esm.js#./chartjunk.esm.js?v=$v#" site/main.js
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
