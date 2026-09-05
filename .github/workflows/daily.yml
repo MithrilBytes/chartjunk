@@ -114,3 +114,14 @@ jobs:
           else
             gh issue create --title "$title" --body "See $url. The 18:00 UTC run retries automatically."
           fi
+      - name: Close the failure issue after recovery
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Daily figure workflow failed"
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          existing=$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" --comment "Recovered: $url"
+          fi
