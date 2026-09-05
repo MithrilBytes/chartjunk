@@ -32,7 +32,7 @@ jobs:
       - name: Generate the corpus
         run: node test/compile-corpus.mjs --out /tmp/corpus --days 7
       - name: Compile with Tectonic
-        uses: wtfjoke/setup-tectonic@v3
+        uses: wtfjoke/setup-tectonic@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           tectonic-version: "0.17.0"
