@@ -19,8 +19,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
@@ -47,26 +47,27 @@ jobs:
         id: check
         env:
           GH_TOKEN: ${{ github.token }}
+          seed: ${{ steps.gen.outputs.seed }}
         run: |
-          seed="${{ steps.gen.outputs.seed }}"
           if [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ] && gh release view "daily-$seed" >/dev/null 2>&1; then
             echo "published=true" >> "$GITHUB_OUTPUT"
           else
             echo "published=false" >> "$GITHUB_OUTPUT"
           fi
-      - uses: wtfjoke/setup-tectonic@v3
+      - uses: wtfjoke/setup-tectonic@5e1ba6e10229bd876c6594189bdab1a62b9d0b1c # v4.0.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           tectonic-version: "0.17.0"
       - name: Cache Tectonic packages
-        uses: actions/cache@v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/Tectonic
           key: tectonic-bundle-${{ runner.os }}
       - name: Compile the PDF
         if: steps.check.outputs.published == 'false'
+        env:
+          seed: ${{ steps.gen.outputs.seed }}
         run: |
-          seed="${{ steps.gen.outputs.seed }}"
           for i in 1 2 3; do
             tectonic "doc-$seed.tex" --outdir . && break
             echo "tectonic attempt $i failed; retrying in 30s"
@@ -78,14 +79,15 @@ jobs:
         if: steps.check.outputs.published == 'false'
         env:
           GH_TOKEN: ${{ github.token }}
+          seed: ${{ steps.gen.outputs.seed }}
+          title: ${{ steps.gen.outputs.title }}
         run: |
-          seed="${{ steps.gen.outputs.seed }}"
           if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             gh release delete "daily-$seed" --yes --cleanup-tag 2>/dev/null || true
           fi
           for i in 1 2 3; do
             gh release create "daily-$seed" \
-              --title "${{ steps.gen.outputs.title }}" \
+              --title "$title" \
               --notes "Figure of the day, seed \`$seed\`. Reproduce it at https://mithrilbytes.github.io/chartjunk/?seed=$seed" \
               "chartjunk-$seed.svg" "chartjunk-$seed.tex" "chartjunk-$seed.pdf" && break
             echo "release attempt $i failed; retrying in 20s"
