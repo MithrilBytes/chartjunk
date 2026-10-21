@@ -62,7 +62,21 @@ const PANEL_BASE_KINDS: readonly [PanelKind, number][] = [
 const MISMATCH_KINDS: readonly PanelKind[] = ["heatmap", "pareto", "phase", "radar", "pie", "venn"];
 const PANEL_LETTERS = ["a", "b", "c", "d", "e", "f"];
 
+const KINDS: readonly string[] = [
+  "figure", "panels", "caption", ...SINGLE_KINDS.map(([k]) => k),
+];
+const SIZE_NAMES: readonly string[] = ["single", "double", "square", "wide"];
+
+function checkOption(name: string, value: unknown, allowed: readonly string[]): void {
+  if (value !== undefined && !(typeof value === "string" && allowed.includes(value))) {
+    throw new TypeError(`chartjunk: unknown ${name} ${JSON.stringify(value)}; expected one of ${allowed.join(", ")}`);
+  }
+}
+
 export function generateFigure(opts: GenerateOptions = {}): Figure {
+  checkOption("kind", opts.kind, KINDS);
+  checkOption("style", opts.style, Object.keys(STYLES));
+  checkOption("size", opts.size, SIZE_NAMES);
   const seed = opts.seed ?? randomSeed();
   const root = new Rng(seed);
   const style = opts.style ?? "matplotlib";
