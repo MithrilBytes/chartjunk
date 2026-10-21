@@ -59,3 +59,24 @@ describe("markdown format", () => {
     expect(md.includes("data:image")).toBe(false);
   });
 });
+
+describe("hostile input", () => {
+  const evil = "X<img src=x onerror=alert(1)>](javascript:alert(2))*";
+
+  it("caller vocabulary cannot inject markup into any format", () => {
+    const fig = generateFigure({ seed: 1, vocabulary: { method: evil } });
+    for (const format of ["svg", "html", "markdown"] as const) {
+      const out = chartjunk({ seed: 1, format, vocabulary: { method: evil } });
+      expect(out.includes("<img"), format).toBe(false);
+    }
+    const md = renderMarkdown(fig, { svgRef: "fig.svg" });
+    expect(md.includes("](javascript:"), "link breakout").toBe(false);
+    expect(md.split("\n")[0].endsWith("(fig.svg)"), "image target intact").toBe(true);
+  });
+
+  it("unknown kind, style, or size is rejected by name", () => {
+    expect(() => generateFigure({ kind: "nope" as never })).toThrow(/unknown kind/);
+    expect(() => generateFigure({ style: "constructor" as never })).toThrow(/unknown style/);
+    expect(() => generateFigure({ size: "__proto__" as never })).toThrow(/unknown size/);
+  });
+});
