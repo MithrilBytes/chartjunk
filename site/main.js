@@ -140,8 +140,11 @@ for (const name of DIALS) {
     document.querySelector(`[data-value="${name}"]`).textContent = Number(v).toFixed(2);
   }
 }
-if (params.get("kind")) document.getElementById("kind").value = params.get("kind");
-if (params.get("style")) document.getElementById("style").value = params.get("style");
+for (const name of ["kind", "style"]) {
+  const v = params.get(name);
+  const sel = document.getElementById(name);
+  if (v && [...sel.options].some((o) => o.value === v)) sel.value = v;
+}
 if (params.get("mono") === "1") document.getElementById("mono").checked = true;
 if (params.get("orphan") === "0") document.getElementById("orphan").checked = false;
 generate();
