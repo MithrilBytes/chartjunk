@@ -16,7 +16,7 @@ export function renderMarkdown(fig: Figure, opts: MarkdownOptions = {}): string 
   const plain = plainCaption(fig.caption.runs);
   const ref = opts.svgRef
     ?? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(renderSvg(fig, { caption: false }))}`;
-  const alt = `Figure ${fig.number}: ${plain}`.replaceAll("[", "(").replaceAll("]", ")");
+  const alt = escapeMd(`Figure ${fig.number}: ${plain}`.replaceAll("[", "(").replaceAll("]", ")"));
   return [
     `![${alt}](${ref})`,
     "",
@@ -42,6 +42,11 @@ function runsMarkdown(runs: Run[]): string {
     .join("");
 }
 
+/** Raw HTML in markdown passes through most renderers, so it is entity-encoded. */
 function escapeMd(s: string): string {
-  return s.replace(/([*_`[\]])/g, "\\$1");
+  return s
+    .replace(/([\\*_`[\]()!#|~])/g, "\\$1")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
